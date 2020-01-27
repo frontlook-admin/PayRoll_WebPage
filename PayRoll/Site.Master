@@ -1,0 +1,109 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="PayRoll.SiteMaster" %>
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%: Page.Title %> - My ASP.NET Application</title>
+
+    <asp:PlaceHolder runat="server">
+        <%: Scripts.Render("~/bundles/modernizr") %>
+    </asp:PlaceHolder>
+
+    <webopt:bundlereference runat="server" path="~/Content/css" />
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+
+</head>
+<body>
+    <form runat="server">
+        <asp:ScriptManager runat="server">
+            <Scripts>
+                <%--To learn more about bundling scripts in ScriptManager see https://go.microsoft.com/fwlink/?LinkID=301884 --%>
+                <%--Framework Scripts--%>
+                <asp:ScriptReference Name="MsAjaxBundle" />
+                <asp:ScriptReference Name="jquery" />
+                <asp:ScriptReference Name="bootstrap" />
+                <asp:ScriptReference Name="WebForms.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebForms.js" />
+                <asp:ScriptReference Name="WebUIValidation.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebUIValidation.js" />
+                <asp:ScriptReference Name="MenuStandards.js" Assembly="System.Web" Path="~/Scripts/WebForms/MenuStandards.js" />
+                <asp:ScriptReference Name="GridView.js" Assembly="System.Web" Path="~/Scripts/WebForms/GridView.js" />
+                <asp:ScriptReference Name="DetailsView.js" Assembly="System.Web" Path="~/Scripts/WebForms/DetailsView.js" />
+                <asp:ScriptReference Name="TreeView.js" Assembly="System.Web" Path="~/Scripts/WebForms/TreeView.js" />
+                <asp:ScriptReference Name="WebParts.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebParts.js" />
+                <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
+                <asp:ScriptReference Name="WebFormsBundle" />
+                <%--Site Scripts--%>
+            </Scripts>
+        </asp:ScriptManager>
+
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" runat="server" href="~/">Application name</a>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a runat="server" href="~/"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Master<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a runat="server" href="/Salhead.aspx">Salary Head</a></li>
+                                <li><a runat="server" href="/Salinfo.aspx">Salary Info</a></li>
+                                <li><a runat="server" href="/Salgen.aspx">Salary Generate</a></li>
+                                <li><a runat="server" href="/attendance.aspx">Attendence</a></li>
+                            </ul>
+                        </li>
+                        <li><a runat="server" href="~/About"><span class="glyphicon glyphicon-info-sign"></span>  About</a></li>
+                        <li><a runat="server" href="~/Contact"><span class="glyphicon glyphicon-phone"></span> Contact</a></li>
+                        <!--
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Page 4
+                                <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a runat="server" href="#">Page 1-1</a></li>
+                                <li><a runat="server" href="#">Page 1-2</a></li>
+                                <li><a runat="server" href="#">Page 1-3</a></li>
+                            </ul>
+                        </li>
+                        -->
+                    </ul>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="container body-content">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server">
+            </asp:ContentPlaceHolder>
+            <hr />
+            <footer>
+                <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+                    <ContentTemplate>
+                            
+                        <label><%=DateTime.Now.ToString("F") %></label><p>&copy; <%: DateTime.Now.Year %> - FrontLook.Inc</p>
+                        <asp:Timer runat="server" ID="timer" Interval="1000"/>
+                    </ContentTemplate>
+                    <Triggers>
+                        <asp:AsyncPostBackTrigger ControlID="timer" EventName="Tick"></asp:AsyncPostBackTrigger>
+                    </Triggers>
+                </asp:UpdatePanel>
+            </footer>
+        </div>
+
+    </form>
+</body>
+<script>
+    $(document).ready(function () {
+        $(".dropdown").hover(function () {
+            //toggle the open class (on/off)
+            $(this).toggleClass("open");
+        });
+    })
+</script>
+</html>
