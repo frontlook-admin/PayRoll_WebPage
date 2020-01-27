@@ -11,17 +11,17 @@ namespace PayRoll
 {
 
 
-    public partial class Salgen
+    public partial class Salinfo
     {
 
         /// <summary>
-        /// salgen_panel control.
+        /// add_sec_salinfo_panel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel salgen_panel;
+        protected global::System.Web.UI.WebControls.Panel add_sec_salinfo_panel;
 
         /// <summary>
         /// emp control.
@@ -33,30 +33,21 @@ namespace PayRoll
         protected global::System.Web.UI.WebControls.DropDownList emp;
 
         /// <summary>
-        /// set_date control.
+        /// add_sec_salinfo control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox set_date;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl add_sec_salinfo;
 
         /// <summary>
-        /// salgen control.
+        /// update_salinfo control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl salgen;
-
-        /// <summary>
-        /// btn control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btn;
+        protected global::System.Web.UI.WebControls.Button update_salinfo;
     }
 }

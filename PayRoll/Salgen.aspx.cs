@@ -1,105 +1,261 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Drawing;
+using System.Data;
 using System.Linq;
-using System.Web;
-using System.Web.UI;
 using System.Web.UI.WebControls;
+using frontlook_dotnetframework_library.FL_universal;
 using _response = frontlook_dotnetframework_library.FL_webpage.FL_general.FL_response;
-using _color = frontlook_dotnetframework_library.FL_webpage.FL_general.FL_Color;
+using _controls = frontlook_dotnetframework_library.FL_webpage.FL_Controls.FL_GetControl;
 using _sql = frontlook_dotnetframework_library.FL_webpage.FL_DataBase.FL_MySql.FL_MySqlExecutor;
-using frontlook_dotnetframework_library.FL_webpage.FL_general;
 using MySql.Data.MySqlClient;
-using helpers;
-using _repo = helpers.FL_Repo;
+using repository;
+using _prr = repository.payroll_repo;
+using _repo = repository;
+using frontlook_dotnetframework_library.FL_webpage.FL_Controls;
+using System.Text.RegularExpressions;
 
 namespace PayRoll
 {
     public partial class Salgen : System.Web.UI.Page
     {
-
         private static readonly string Constring = ConfigurationManager.ConnectionStrings["payrollConnectionString"].ConnectionString;
 
         private readonly MySqlConnection con =
             new MySqlConnection(Constring);
 
         private readonly MySqlCommand cmd = new MySqlCommand();
-
-
-        //Salhead_repo get_data = new Salhead_repo();
-        //Salhead_repo persistant_data = new Salhead_repo();
-
-        private string spaces, enter;
-
         protected void Page_Load(object sender, EventArgs e)
         {
-
-            cmd.Connection = con;
             if (!IsPostBack)
             {
-                Onpageload();
+                OnPageLoad();
+            }
+
+            /*
+            var x = "((`Ta`+`Main Salary`)*12/100)+1";
+
+            bool b = check_formula_all(x);
+            while (!b)
+            {
+                x = replace_formula(x);
+                Response.Write(_response.FL_printmessage_to_webpage(x));
+                b = check_formula_all(x);
+            }
+            Response.Write(_response.FL_printmessage_to_webpage(replace_formula(x)));
+
+            */
+        }
+
+        private bool check_formula(string columnName, string tableName)
+        {
+            return _sql.FL_Check_Column_Exists(con, cmd, _prr.database_name, tableName, columnName);
+        }
+
+        private bool check_formula_all(string formula)
+        {
+            bool bo = true;
+            Regex regex = new Regex(@"([a-z A-Z]+)*");
+            foreach (Match x in regex.Matches(formula))
+            {
+                if (!string.IsNullOrEmpty(x.Value))
+                {
+                    bo = bo && check_formula(x.Value, "salary_info");
+                }
+            }
+            return bo;
+            /*var regex = new Regex(@"([a-z A-Z]+)*");
+            return regex.Matches(formula).Cast<Match>().Aggregate(true, (Current, X) => Current && check_formula(X.Value, "salary_info"));*/
+        }
+
+        private string return_formula(string x)
+        {
+            var c = "";
+            cmd.CommandText =
+                "SELECT salhead_formula, salhead_group_id, group_name, group_code FROM salary_head LEFT JOIN head_group ho on salary_head.salhead_group_id = ho.group_id WHERE salhead_name='" +
+                x + "';";
+            _sql.Con_switch(con);
+            var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                c = reader["salhead_formula"].ToString();
+            }
+            reader.Close();
+            reader.Dispose();
+            _sql.Con_switch(con);
+            Response.Write(_response.FL_printmessage_to_webpage(c));
+            return c;
+        }
+
+        private string replace_formula(string formula)
+        {
+            bool b = check_formula_all(formula);
+            Regex regex = new Regex(@"([a-z A-Z]+)*");
+            while (!b)
+            {
+                foreach (Match x in regex.Matches(formula))
+                {
+                    if (!string.IsNullOrEmpty(x.Value))
+                    {
+                        if (!check_formula(x.Value, "salary_info"))
+                        {
+                            var formula1 = return_formula(x.Value);
+                            formula1 = "(" + formula1 + ")";
+                            //Response.Write(_response.FL_printmessage_to_webpage(formula1));
+                            formula = formula.Replace("`" + x.Value + "`", formula1);
+                        }
+                        //Response.Write(_response.FL_printmessage_to_webpage("" + check_formula_all(formula)));
+
+                    }
+                }
+                b = check_formula_all(formula);
+            }
+            return formula;
+        }
+
+        private void test(string id)
+        {
+            Regex regex = new Regex(@"([a-z A-Z]+)*");
+            foreach (Match x in regex.Matches(id))
+            {
+                Response.Write(_response.FL_printmessage_to_webpage(x.Value));
+            }
+        }
+
+        private string[] rectified_formula(string[] formula)
+        {
+            int count = formula.Length;
+            for (var i = 0; i <= (count - 1); i++)
+            {
+                formula[i] = replace_formula(formula[i]);
+                Response.Write(_response.FL_printmessage_to_webpage(formula[i]));
+            }
+
+            return formula;
+        }
+
+        private void get_value(string id)
+        {
+            if (!String.Equals(id, "0"))
+            {
+                var count = cmd.Head_Count_Salhead(con);
+                var controlids = cmd.get_ControlIds_Salhead(con);
+                var ids = cmd.Get_Ids_Salhead(con);
+                var groups = new string[count];
+                var sign = new string[count];
+                var amts = new double[count];
+                var formula = new string[count];
+
+                for (var i = 0; i <= (count - 1); i++)
+                {
+                    cmd.CommandText =
+                        "SELECT salhead_formula, salhead_group_id, group_name, group_code FROM salary_head LEFT JOIN head_group ho on salary_head.salhead_group_id = ho.group_id WHERE salhead_name = '" + ids[i] +
+                        "';";
+                    _sql.Con_switch(con);
+                    var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        formula[i] = reader["salhead_formula"].ToString();
+                        sign[i] = reader["group_code"].ToString();
+                    }
+
+                    reader.Close();
+                    reader.Dispose();
+                    _sql.Con_switch(con);
+                }
+
+                formula = rectified_formula(formula);
+
+                for (var i = 0; i <= (count - 1); i++)
+                {
+                    Response.Write(_response.FL_printmessage_to_webpage(formula[i]));
+                    cmd.CommandText = "SELECT " + formula[i] + " AS `" + ids[i] + "` FROM salary_info WHERE id=" +
+                                      int.Parse(id) + ";";
+                    _sql.Con_switch(con);
+                    var reader1 = cmd.ExecuteReader();
+                    while (reader1.Read())
+                    {
+                        var a = reader1[ids[i]].ToString();
+                        if (string.IsNullOrEmpty(a))
+                        {
+                            a = "0.00";
+                        }
+                        amts[i] = Math.Round(double.Parse(a), 2, MidpointRounding.AwayFromZero);
+                        Response.Write(_response.FL_printmessage_to_webpage("<br/>" + formula[i]) + "  " + amts[i]);
+                    }
+
+                    reader1.Close();
+                    reader1.Dispose();
+                    _sql.Con_switch(con);
+
+                    if (!string.IsNullOrEmpty(amts[i].ToString()) && !string.Equals(amts[i].ToString(), "0"))
+                    {
+                        salgen.Controls.Add(FL_Label_TextBox.FL_label_readonly_textbox_default(ids[i]));
+                        ((TextBox)_controls.FL_GetChildControl(salgen, controlids[i])).Text = amts[i].ToString();
+                    }
+                }
+
+                var amt = "";
+                double attendance = attendence_calc.attendence_month(con, cmd, int.Parse(id), set_date.Text.ToString());
+                double days = attendence_calc.no_days_month(con, cmd, set_date.Text);
+                for (var i = 0; i < (count - 1); i = i + 2)
+                {
+                    if (i == 0)
+                    {
+                        amt = amt + sign[i] + precision_point((amts[i] * attendance / days)) + sign[i + 1] + precision_point(amts[i + 1]);
+                    }
+                    else
+                    {
+                        amt = amt + sign[i] + precision_point(amts[i]) + sign[i + 1] + precision_point(amts[i + 1]);
+                    }
+
+                }
+                Response.Write(amt);
+                var val = FL_MathExpression.FL_Result(amt).ToString();
+
+                double final_salary = double.Parse(val);
+                if (!String.IsNullOrEmpty(amt) && !string.Equals(val, "0"))
+                {
+                    salgen.Controls.Add(FL_Label_TextBox.FL_label_readonly_textbox_default("Total Salary"));
+                    ((TextBox)_controls.FL_GetChildControl(salgen, "TotalSalary")).Text = Math.Round(final_salary, 2, MidpointRounding.AwayFromZero).ToString();
+                }
+
+            }
+        }
+
+        public double precision_point(double amount, int precision = -1)
+        {
+            if (precision != -1)
+            {
+                return Math.Round(amount, precision, MidpointRounding.AwayFromZero);
             }
             else
             {
-                //Get_addgroupitems();
-                //Get_salheadids();
-                //Get_editgroupitems();
-                //Modify_fetch_data();
+                return Math.Round(amount, 2, MidpointRounding.AwayFromZero);
+            }
+        }
+
+        public void OnPageLoad()
+        {
+            Get_Elployees(emp);
+            set_date.Text = DateTime.Now.ToString("yyyy-MM-dd");
+        }
+
+        private void Get_Elployees(ListControl dl)
+        {
+            try
+            {
                 cmd.Connection = con;
-            }
+                cmd.CommandText = "SELECT concat(IFNULL(CONCAT(employee.id,'     '),''),IFNULL(CONCAT(employee.fname,' '),''),IFNULL(CONCAT(employee.mname,' '),''),IFNULL(CONCAT(employee.lname,' '),'')) as name,id FROM employee;";
 
-            //Response.Write(_response.FL_printmessage_to_webpage(""+_repo.Column_Exists("salary_info", "Basic 1Pay")));
-        }
-
-        private void add_controls_clear()
-        {
-            var gdata = new Salhead_repo { _code = "", _formula = "", _name = "", _groupcode = "", _startdate = DateTime.Today };
-            add_code.Text = gdata._code;
-            add_name.Text = gdata._name;
-            add_ddl_group.ClearSelection();
-            try
-            {
-                // ReSharper disable once AssignNullToNotNullAttribute
-                add_ddl_group.Items.FindByValue(gdata._groupcode).Selected = true;
-
-            }
-            catch (Exception cv)
-            {
-                Console.WriteLine(cv.Message + enter + spaces + cv.StackTrace + enter + spaces + cv.Data + enter + spaces + cv.HelpLink +
-                                  enter + spaces + cv.Source + enter + spaces + cv.HResult + enter + spaces + cv.InnerException);
-            }
-
-            add_formula.Text = gdata._formula;
-            add_startdate.Text = gdata._startdate.ToString("yyyy-MM-dd");
-        }
-
-        private void Listing_add_ddl()
-        {
-            Get_group(add_ddl_group);
-            Get_formula_list(add_formula_list);
-            add_controls_clear();
-        }
-
-        private void Listing_edit_ddl()
-        {
-            Get_salheadids(salheadid);
-            Get_formula_list(edit_formula_list);
-            Get_group(edit_ddl_group);
-        }
-
-        private void Get_salheadids(DropDownList dl)
-        {
-            try
-            {
                 dl.Items.Clear();
                 var item1 = new ListItem
                 {
-                    Text = "-Select Name-",
+                    Text = "-Select Employee-",
                     Value = "0"
                 };
                 dl.Items.Add(item1);
-                cmd.CommandText = "SELECT salhead_id,salhead_code,salhead_name FROM salary_head;";
+
                 _sql.Con_switch(con);
                 MySqlDataReader reader = cmd.ExecuteReader();
 
@@ -107,8 +263,8 @@ namespace PayRoll
                 {
                     var item = new ListItem
                     {
-                        Text = reader["salhead_name"].ToString(),
-                        Value = reader["salhead_id"].ToString()
+                        Text = reader["name"].ToString(),
+                        Value = reader["id"].ToString()
                     };
                     dl.Items.Add(item);
                 }
@@ -121,534 +277,108 @@ namespace PayRoll
             }
         }
 
-        private void Get_group(DropDownList dl)
+        private string Selection_elements_builder(int count, IReadOnlyList<string> ids)
         {
-            try
+            const string c = "`";
+            const string a = "`,`";
+            var q = "";
+            for (var b = 0; b <= (count - 1); b++)
             {
-                using (cmd)
+                if (b == 0)
                 {
-                    cmd.CommandText = "SELECT group_id,group_name FROM head_group;";
-                    dl.Items.Clear();
-                    _sql.Con_switch(con);
-                    MySqlDataReader reader = cmd.ExecuteReader();
-                    while (reader.Read())
+                    if (count == 1)
                     {
-                        var item = new ListItem
-                        {
-                            Text = reader["group_name"].ToString(),
-                            Value = reader["group_id"].ToString()
-                        };
-                        dl.Items.Add(item);
-                    }
-                    reader.Close();
-                    _sql.Con_switch(con);
-                }
-            }
-            catch (Exception e)
-            {
-                Response.Write(_response.FL_message("Message 2:" + e.Message));
-            }
-        }
-
-        private void Onpageload()
-        {
-            spaces = Server.HtmlDecode("&nbsp;&nbsp;&nbsp;&nbsp;");
-            enter = Server.HtmlDecode("<br/><br/>");
-
-            active_add_salaryhead_div.BackColor = "#0066FF".FL_Color_Code();
-            active_add_salaryhead_div.ForeColor = Color.White;
-            active_edit_salaryhead_div.BackColor = Color.Silver;
-            active_edit_salaryhead_div.ForeColor = Color.Black;
-            add_sec_salhead.Visible = true;
-            editdel_sec_salhead.Visible = false;
-            Listing_add_ddl();
-            add_startdate.Text = DateTime.Today.ToString("yyyy-MM-dd");
-        }
-
-        private void Insert_data(Salhead_repo ins)
-        {
-            cmd.Connection = con;
-
-            cmd.CommandText = "INSERT INTO salary_head (salhead_code, salhead_name, salhead_group_id, salhead_formula,salhead_add_to_salinfo, salhead_start_date) VALUES " +
-                              "('" + ins._code + "','" + ins._name + "','" + ins._groupcode + "','" + ins._formula + "'," + ins._add_to_salinfo + ",'"
-                              + ins._startdate.ToString("yyyy-MM-dd") + "');";
-
-            _sql.Con_switch(con);
-            int r = cmd.ExecuteNonQuery();
-            cmd.CommandText = "";
-            _sql.Con_switch(con);
-
-            if (r == 1)
-            {
-                if (add_checkbox.Checked.Equals(true))
-                {
-                    try
-                    {
-                        cmd.CommandText = "ALTER TABLE salary_info ADD COLUMN `" + ins._name + "` DECIMAL(20,2);";
-                        _sql.Con_switch(con);
-                        var q = cmd.ExecuteNonQuery();
-                        _sql.Con_switch(con);
-                        cmd.CommandText = "ALTER TABLE salary_generate ADD COLUMN `" + ins._name + "` DECIMAL(20,2);";
-                        _sql.Con_switch(con);
-                        var t = cmd.ExecuteNonQuery();
-                        _sql.Con_switch(con);
-                        if (q == t && q == 1)
-                        {
-                            Response.Write(_response.FL_message("Salary Head " + ins._name.ToUpper() + " Successfully Created...!!!",
-                                "salaryhead.aspx';"));
-                        }
-                    }
-                    catch (MySqlException x)
-                    {
-                        Response.Write(_response.FL_message(x.Code + "\\n\\n" + x.SqlState + "\\n\\n" + x.StackTrace + "\\n\\n" + x.Message));
-                    }
-                    catch (Exception ex)
-                    {
-                        Response.Write(_response.FL_message("Message 1:" + ex.Message));
-                    }
-
-                }
-                else
-                {
-                    Response.Write(_response.FL_message("Salary Head " + ins._name.ToUpper() + " Successfully Created...!!!",
-                        "salaryhead.aspx';"));
-                }
-            }
-            else
-            {
-                Response.Write(_response.FL_message("Salary Head Is Already Present With Name " +
-                                                      add_name.ToString().ToUpper()));
-            }
-
-
-
-        }
-
-        private void Update_data(Salhead_repo set)
-        {
-            Response.Write(set._id);
-            cmd.Connection = con;
-            var cmdtxt = "UPDATE salary_head SET " +
-                         "salhead_code = '" + set._code + "', salhead_name = '" + set._name + "', salhead_group_id = '" +
-                         set._groupcode + "', " +
-                         "salhead_formula = '" + set._formula + "', salhead_add_to_salinfo = " + set._add_to_salinfo + "," +
-                         " salhead_start_date = '" + set._startdate.ToString("yyyy-MM-dd") + "' WHERE salhead_id = " + set._id + "; ";
-            /*cmd.CommandText = "CALL salary_head_update(" + set._id + ",'" + set._code + "','" + set._name + "','" +
-                              set._groupcode + "','" + set._formula + "',"+set._add_to_salinfo+",'" + set._startdate.ToString("yyyy-MM-dd") + "');";*/
-            cmd.CommandText = cmdtxt;
-
-            _sql.Con_switch(con);
-            var r = cmd.ExecuteNonQuery();
-            _sql.Con_switch(con);
-            cmd.CommandText = "";
-
-            if (r == 1)
-            {
-                if (edit_checkbox.Checked.Equals(true))
-                {
-                    if (_repo.Column_Exists("salary_info", edit_oldname.Text) && _repo.Column_Exists("salary_generate", edit_oldname.Text))
-                    {
-                        var q = 0;
-                        var t = 0;
-
-                        cmd.CommandText = "ALTER TABLE salary_info CHANGE COLUMN `" + edit_oldname.Text + "` `" + set._name + "` DECIMAL(20,2);";
-                        _sql.Con_switch(con);
-                        q = cmd.ExecuteNonQuery();
-                        _sql.Con_switch(con);
-
-                        cmd.CommandText = "ALTER TABLE salary_generate CHANGE COLUMN `" + edit_oldname.Text + "` `" + set._name + "` DECIMAL(20,2);";
-                        _sql.Con_switch(con);
-                        t = cmd.ExecuteNonQuery();
-                        _sql.Con_switch(con);
-
-                        if (q == t && q == 1)
-                        {
-                            Listing_edit_ddl();
-                            Response.Write(_response.FL_message("Salary Head Column " + edit_oldname.Text.ToUpper() + " Changed To" + set._name.ToUpper() +
-                                                                " Successfully...!!!", "~/salaryhead.aspx"));
-                        }
+                        q = q + c + ids[b] + c;
                     }
                     else
                     {
-                        try
-                        {
-                            var q = 0;
-                            var t = 0;
-
-                            if (_repo.Column_Exists("salary_info", edit_oldname.Text))
-                            {
-                                cmd.CommandText = "ALTER TABLE salary_info CHANGE COLUMN `" + edit_oldname.Text + "` `" + set._name + "` DECIMAL(20,2);";
-                                _sql.Con_switch(con);
-                                q = cmd.ExecuteNonQuery();
-                                _sql.Con_switch(con);
-                            }
-                            else
-                            {
-                                cmd.CommandText = "ALTER TABLE salary_info ADD COLUMN `" + set._name + "` DECIMAL(20,2);";
-                                _sql.Con_switch(con);
-                                q = cmd.ExecuteNonQuery();
-                                _sql.Con_switch(con);
-                            }
-
-                            if (_repo.Column_Exists("salary_generate", edit_oldname.Text))
-                            {
-                                cmd.CommandText = "ALTER TABLE salary_generate CHANGE COLUMN `" + edit_oldname.Text + "` `" + set._name + "` DECIMAL(20,2);";
-                                _sql.Con_switch(con);
-                                t = cmd.ExecuteNonQuery();
-                                _sql.Con_switch(con);
-                            }
-                            else
-                            {
-                                cmd.CommandText = "ALTER TABLE salary_generate ADD COLUMN `" + set._name + "` DECIMAL(20,2);";
-                                _sql.Con_switch(con);
-                                t = cmd.ExecuteNonQuery();
-                                _sql.Con_switch(con);
-                            }
-
-                            if (q == t && t == 1)
-                            {
-                                Response.Write(_response.FL_message("Salary Head " + set._name.ToUpper() + " Successfully Created...!!!",
-                                    "salaryhead.aspx';"));
-                            }
-                        }
-                        catch (MySqlException x)
-                        {
-                            Response.Write(_response.FL_message(x.Code + "\\n\\n" + x.SqlState + "\\n\\n" + x.StackTrace + "\\n\\n" + x.Message));
-                        }
-                        catch (Exception ex)
-                        {
-                            Response.Write(_response.FL_message("Message 1:" + ex.Message));
-                        }
+                        q = q + c + ids[b] + a;
                     }
+                }
+                else if (b > 0 && count > (b + 1))
+                {
+                    q = q + ids[b] + a;
+                }
+                else if (b > 0 && count == (b + 1))
+                {
+                    q = q + ids[b] + c;
                 }
                 else
                 {
-                    /*if (_repo.Column_Exists("salary_info", edit_oldname.Text))
-                    {
-                        cmd.CommandText = "ALTER TABLE salary_info drop COLUMN `" + edit_oldname.Text + "`;";
-                        _sql.Con_switch(con);
-                        var q = cmd.ExecuteNonQuery();
-                        _sql.Con_switch(con);
-                        cmd.CommandText = "ALTER TABLE salary_generate drop COLUMN `" + edit_oldname.Text + "`;";
-                        _sql.Con_switch(con);
-                        var t = cmd.ExecuteNonQuery();
-                        _sql.Con_switch(con);
-                        if (q == t && t == 1)
-                        {
-                            Response.Write(_response.FL_message("Salary Head Column " + edit_oldname.Text.ToUpper() +
-                                                                " Changed To" + set._name.ToUpper() +
-                                                                " Successfully...!!!", "~/salaryhead.aspx"));
-                        }
-                    }*/
-                    var q = 0;
-                    var t = 0;
-                    if (_repo.Column_Exists("salary_info", edit_oldname.Text))
-                    {
-                        cmd.CommandText = "ALTER TABLE salary_info drop COLUMN `" + edit_oldname.Text + "`;";
-                        _sql.Con_switch(con);
-                        q = cmd.ExecuteNonQuery();
-                        _sql.Con_switch(con);
-                    }
-
-                    if (_repo.Column_Exists("salary_generate", edit_oldname.Text))
-                    {
-                        cmd.CommandText = "ALTER TABLE salary_generate drop COLUMN `" + edit_oldname.Text + "`;";
-                        _sql.Con_switch(con);
-                        t = cmd.ExecuteNonQuery();
-                        _sql.Con_switch(con);
-
-                    }
-                    if (q == t && t == 1)
-                    {
-                        Response.Write(_response.FL_message("Salary Head Column " + edit_oldname.Text.ToUpper() +
-                                                            " Changed To" + set._name.ToUpper() +
-                                                            " Successfully...!!!", "~/salaryhead.aspx"));
-                    }
+                    break;
                 }
             }
-            else
-            {
-
-                Response.Write(_response.FL_message("Salary Head Is Already Present With Name " +
-                set._name.ToUpper()));
-            }
-
-
+            return q;
         }
 
-        private void Delete_data()
+        private void Get_data(string id)
         {
-            cmd.Connection = con;
-            try
+            var count = cmd.Head_Count_Salhead(con);
+
+            var controlids = cmd.get_ControlIds_Salhead(con);
+            var ids = cmd.Get_Ids_Salhead(con);
+
+            var q = Selection_elements_builder(count, ids);
+
+            if (!emp.SelectedValue.Equals("0"))
             {
-                cmd.CommandText = "CALL salary_head_delete(" + int.Parse(salheadid.SelectedValue) + ");";
+                //Dynamiccontrols();
+                cmd.CommandText = "SELECT " + q + " FROM salary_info WHERE id = " + id + ";";
                 _sql.Con_switch(con);
-                var r = cmd.ExecuteNonQuery();
-                _sql.Con_switch(con);
-                if (r == 1)
+                MySqlDataReader reader1 = cmd.ExecuteReader();
+
+                while (reader1.Read())
                 {
-                    var q = 0;
-                    var t = 0;
-                    if (_repo.Column_Exists("salary_info", edit_oldname.Text))
+                    if (!emp.SelectedValue.Equals("0"))
                     {
-                        cmd.CommandText = "ALTER TABLE salary_info drop COLUMN `" + edit_oldname.Text + "`;";
-                        _sql.Con_switch(con);
-                        q = cmd.ExecuteNonQuery();
-                        _sql.Con_switch(con);
-                    }
-
-                    if (_repo.Column_Exists("salary_generate", edit_oldname.Text))
-                    {
-                        cmd.CommandText = "ALTER TABLE salary_generate drop COLUMN `" + edit_oldname.Text + "`;";
-                        _sql.Con_switch(con);
-                        t = cmd.ExecuteNonQuery();
-                        _sql.Con_switch(con);
-
-                    }
-                    if (q == t && t == 1)
-                    {
-                        Response.Write(_response.FL_message(edit_oldname.Text.ToUpper(), "salaryhead.aspx"));
-                    }
-                }
-                else
-                {
-                    Response.Write(_response.FL_message("Something went wrong while deleting " +
-                                                        edit_oldname.Text.ToUpper() + "...!!"));
-                }
-            }
-            catch (Exception e)
-            {
-                Response.Write(_response.FL_message(e.Message));
-            }
-        }
-
-        private void Set_data_for_saving()
-        {
-            char[] a = new char[]
-            {
-            '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '+', '=', '`', '|'
-            ,';','"',':','>','?','<',',','.','{','}','[',']','/','*','-','+'
-            };
-            var setData = new Salhead_repo
-            {
-                _name = add_name.Text,
-                _code = add_name.Text.Trim(a).Replace(" ", string.Empty),
-                _groupcode = add_ddl_group.SelectedItem.Value,
-                _formula = add_formula.Text,
-                _add_to_salinfo = add_checkbox.Checked,
-                _startdate = DateTime.Parse(add_startdate.Text)
-            };
-
-
-            Insert_data(setData);
-
-
-            Listing_add_ddl();
-        }
-
-        private void Set_data_for_updating()
-        {
-            char[] a = new char[]
-            {
-            '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '+', '=', '`', '|'
-            ,';','"',':','>','?','<',',','.','{','}','[',']','/','*','-','+'
-            };
-            var set = new Salhead_repo
-            {
-                _name = edit_name.Text,
-                _code = edit_name.Text.Trim(a).Replace(" ", string.Empty),
-                _formula = edit_formula.Text,
-                _groupcode = edit_ddl_group.SelectedValue,
-                _id = int.Parse(salheadid.SelectedValue),
-                _add_to_salinfo = edit_checkbox.Checked,
-                _oldname = edit_oldname.Text,
-                _startdate = DateTime.ParseExact(edit_startdate.Text, "yyyy-MM-dd", null)
-            };
-            Update_data(set);
-        }
-
-        private Salhead_repo Modify_data_allocation()
-        {
-            var gdata = new Salhead_repo { _id = int.Parse(salheadid.SelectedValue) };
-            cmd.CommandText = "SELECT salhead_code,salhead_name,salhead_group_id,salhead_formula,salhead_add_to_salinfo,salhead_start_date FROM salary_head WHERE salhead_id = " + gdata._id + ";";
-            _sql.Con_switch(con);
-            MySqlDataReader reader = cmd.ExecuteReader();
-            while (reader.Read())
-            {
-                gdata._code = reader["salhead_code"].ToString();
-                gdata._name = reader["salhead_name"].ToString();
-                gdata._groupcode = reader["salhead_group_id"].ToString();
-                gdata._formula = reader["salhead_formula"].ToString();
-                var a = reader["salhead_add_to_salinfo"].ToString();
-                if (a == "1")
-                {
-                    gdata._add_to_salinfo = true;
-                }
-                else
-                {
-                    gdata._add_to_salinfo = false;
-                }
-                gdata._startdate = DateTime.Parse(reader["salhead_start_date"].ToString());
-            }
-            _sql.Con_switch(con);
-            gdata._oldname = gdata._name;
-            return gdata;
-        }
-
-        private void Modify_fetch_data()
-        {
-            var gdata = Modify_data_allocation();
-
-            edit_code.Text = gdata._code;
-            edit_name.Text = gdata._name;
-            edit_oldname.Text = gdata._oldname;
-            edit_ddl_group.ClearSelection();
-            Response.Write(gdata._groupcode);
-            try
-            {
-                edit_ddl_group.Items.FindByValue(gdata._groupcode).Selected = true;
-            }
-            catch (Exception cv)
-            {
-                Console.WriteLine(cv.Message + enter + spaces + cv.StackTrace + enter + spaces + cv.Data + enter + spaces + cv.HelpLink +
-
-                                  enter + spaces + cv.Source + enter + spaces + cv.HResult + enter + spaces + cv.InnerException);
-            }
-
-            edit_formula.Text = gdata._formula;
-            edit_checkbox.Checked = gdata._add_to_salinfo;
-            edit_startdate.Text = gdata._startdate.ToString("yyyy-MM-dd");
-
-        }
-
-        protected void Active_add_salaryhead_div_Click(object sender, EventArgs e)
-        {
-            active_add_salaryhead_div.BackColor = "#0066FF".FL_Color_Code();
-            active_add_salaryhead_div.ForeColor = Color.White;
-            active_edit_salaryhead_div.BackColor = Color.Silver;
-            active_edit_salaryhead_div.ForeColor = Color.Black;
-            add_sec_salhead.Visible = true;
-            editdel_sec_salhead.Visible = false;
-            Listing_add_ddl();
-        }
-
-        protected void Active_edit_salaryhead_div_Click(object sender, EventArgs e)
-        {
-            active_edit_salaryhead_div.BackColor = "#0066FF".FL_Color_Code();
-            active_edit_salaryhead_div.ForeColor = Color.White;
-            active_add_salaryhead_div.BackColor = Color.Silver;
-            active_add_salaryhead_div.ForeColor = Color.Black;
-            editdel_sec_salhead.Visible = true;
-            add_sec_salhead.Visible = false;
-            Listing_edit_ddl();
-            Modify_fetch_data();
-        }
-
-        protected void Save_salhead_Click(object sender, EventArgs e)
-        {
-
-            if (!string.IsNullOrEmpty(add_name.Text) &&
-                           !string.IsNullOrEmpty(add_ddl_group.SelectedValue))
-            {
-                Set_data_for_saving();
-            }
-            else
-            {
-                Response.Write(_response.FL_message("No Fields Can Be Empty..!!"));
-            }
-        }
-
-        protected void Salheadid_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            //Response.Write(salheadid.SelectedValue);
-            Modify_fetch_data();
-        }
-
-        protected void Update_salhead_Click(object sender, EventArgs e)
-        {
-
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-
-            if (!string.IsNullOrEmpty(edit_name.Text))
-            {
-                Set_data_for_updating();
-            }
-            else
-            {
-                Response.Write(_response.FL_message("No Fields Can Be Empty..!!"));
-            }
-
-            Listing_edit_ddl();
-            Modify_fetch_data();
-        }
-
-        protected void Del_salhead_Click(object sender, EventArgs e)
-        {
-            Delete_data();
-            Listing_edit_ddl();
-            Modify_fetch_data();
-        }
-
-        private void Get_formula_list(ListBox lb)
-        {
-            try
-            {
-
-                using (cmd)
-                {
-                    cmd.CommandText = "SELECT salhead_name,salhead_formula FROM salary_head;";
-                    lb.Items.Clear();
-                    var item0 = new ListItem
-                    {
-                        Text = "CONDITIONAL FORMULA",
-                        Value = "(IF ((CONDITION),(TRUE),(FALSE)))"
-                    };
-                    lb.Items.Add(item0);
-                    _sql.Con_switch(con);
-                    MySqlDataReader reader = cmd.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        var item = new ListItem
+                        for (int j = 0; j + 1 <= count; j++)
                         {
-                            Text = reader["salhead_name"].ToString(),
-                            Value = reader["salhead_formula"].ToString()
-                        };
-                        lb.Items.Add(item);
+                            string val = reader1[ids[j]].ToString();
+                            if (!String.IsNullOrEmpty(val) || !String.Equals(val, "0"))
+                            {
+                                ((TextBox)_controls.FL_GetChildControl(salgen, controlids[j])).Text = val;
+                            }
+                        }
                     }
-                    reader.Close();
-                    _sql.Con_switch(con);
                 }
+                reader1.Close();
+                _sql.Con_switch(con);
             }
-            catch (Exception e)
+            /*else
             {
-                Response.Write(_response.FL_message("Message 2:" + e.Message));
+                for (var j = 0; j + 1 <= count; j++)
+                {
+                    ((TextBox)_controls.FL_GetChildControl(salgen, controlids[j])).Text = string.Empty;
+                }
+            }*/
+        }
+
+        private void Dynamiccontrols()
+        {
+            try
+            {
+                cmd.Connection = con;
+                //cmd.CommandText = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='payroll_db' AND TABLE_NAME='salary_info' AND COLUMN_NAME NOT IN (SELECT 'id');";
+                cmd.CommandText = "SELECT salhead_name FROM salary_head;";
+                _sql.Con_switch(con);
+                MySqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    string a = reader["salhead_name"].ToString();
+                    salgen.Controls.Add(FL_Label_TextBox.FL_label_readonly_textbox_default(a));
+                }
+                reader.Close();
+                _sql.Con_switch(con);
+            }
+            catch (MySqlException)
+            {
+                Response.Write(_response.FL_message("Sorry..!! Unable to create the form. Please contact your developer for help."));
             }
         }
 
-        [System.Web.Services.WebMethod()]
-        [System.Web.Script.Services.ScriptMethod()]
-        private void add_text_to_cursor_position(TextBox TextBox, string input)
+        protected void btn_Click(object sender, EventArgs e)
         {
-            string jsFunc = $"insertAtCursor(" + TextBox.ID + "," + input + ")";
-            //ScriptManager.RegisterStartupScript(this.Page, Page.GetType(), "myJsFn", jsFunc, true);
-            ScriptManager.RegisterStartupScript(this.Page, GetType(), "insertAtCursor", jsFunc, true);
-            ClientScript.RegisterClientScriptBlock(GetType(), "id", jsFunc, true);
-        }
-
-        protected void add_formula_list_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            add_formula.Text = add_formula.Text + add_formula_list.SelectedValue;
-
-            var insertText = add_formula_list.SelectedValue;
-            add_text_to_cursor_position(add_formula, insertText);
-            string jsFunc = $"insertAtCursor(" + add_formula.ID + "," + insertText + ")";
-            //ScriptManager.RegisterStartupScript(this.Page, Page.GetType(), "myJsFn", jsFunc, true);
-            ScriptManager.RegisterClientScriptBlock(this.add_formula_list, GetType(), "insertAtCursor", jsFunc, true);
-        }
-
-        protected void edit_formula_list_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            edit_formula.Text = edit_formula.Text + edit_formula_list.SelectedValue;
+            get_value(emp.SelectedValue);
         }
     }
 }

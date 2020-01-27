@@ -1,4 +1,4 @@
-﻿namespace helpers
+﻿namespace repository
 {
     public static class payroll_repo
     {

@@ -1,20 +1,20 @@
 create table `Worker Type`
-                  (
-                  	ID int auto_increment,
-                  	`Catagory Name` VARCHAR(20) not null,
-                  	`Arrange Order` int null,
-                  	Command LONGTEXT null,
-                  	Remark LONGTEXT null,
-                  	constraint `Worker Type_pk`
-                  		primary key (ID)
-                  )
-                  comment 'Determines Employee Type';
+				  (
+					ID int auto_increment,
+					`Catagory Name` VARCHAR(20) not null,
+					`Arrange Order` int null,
+					Command LONGTEXT null,
+					Remark LONGTEXT null,
+					constraint `Worker Type_pk`
+						primary key (ID)
+				  )
+				  comment 'Determines Employee Type';
 
 create unique index `Worker Type_Arrange Order_uindex`
-                  	on `Worker Type` (`Arrange Order`);
+					on `Worker Type` (`Arrange Order`);
 
 create unique index `Worker Type_Catagory Name_uindex`
-                  	on `Worker Type` (`Catagory Name`);
+					on `Worker Type` (`Catagory Name`);
 
 create table Department
 (

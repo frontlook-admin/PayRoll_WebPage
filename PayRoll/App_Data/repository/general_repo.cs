@@ -1,7 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using _sql = frontlook_dotnetframework_library.FL_webpage.FL_DataBase.FL_MySql.FL_MySqlExecutor;
 
-namespace helpers
+namespace repository
 {
     public static class general_repo
     {
@@ -59,7 +59,7 @@ namespace helpers
             return controlids;
         }
 
-        public static void get_SalHead_ControlIds(this MySqlCommand cmd, MySqlConnection con,string[] controlids = null, string[] ids = null )
+        public static void get_SalHead_ControlIds(this MySqlCommand cmd, MySqlConnection con, string[] controlids = null, string[] ids = null)
         {
             controlids = cmd.get_ControlIds_Salhead(con);
             ids = cmd.Get_Ids_Salhead(con);

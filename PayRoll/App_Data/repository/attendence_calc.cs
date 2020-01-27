@@ -1,14 +1,14 @@
 ﻿using MySql.Data.MySqlClient;
 using _sql = frontlook_dotnetframework_library.FL_webpage.FL_DataBase.FL_MySql.FL_MySqlExecutor;
 
-namespace helpers
+namespace repository
 {
     public static class attendence_calc
     {
-        public static double attendence_month(MySqlConnection con, MySqlCommand cmd, int employee_id, string date)
+        public static double attendence_month(MySqlConnection con, MySqlCommand cmd, int employeeId, string date)
         {
             cmd.CommandText = "SELECT COUNT(Attendance) as c FROM attendance WHERE id = " +
-                              employee_id + " AND MONTH(date) = MONTH('"+date+"')";
+                              employeeId + " AND MONTH(date) = MONTH('" + date + "')";
             _sql.Con_switch(con);
             MySqlDataReader reader = cmd.ExecuteReader();
             double c = 0;
