@@ -23,7 +23,6 @@ namespace PayRoll_JMJPL.Models
         [Required]
         public string DepartmentCode { get; set; }
 
-        [MaxLength(11)]
         [Column("Arrange Order")]
         [Display(Name = "Arrange Order")]
         //[Required]
