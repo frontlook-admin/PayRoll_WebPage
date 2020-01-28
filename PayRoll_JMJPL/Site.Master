@@ -1,4 +1,4 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="PayRoll.SiteMaster" %>
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="PayRoll_JMJPL.SiteMaster" %>
 
 <!DOCTYPE html>
 
@@ -50,31 +50,11 @@
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        <li><a runat="server" href="~/"><span class="glyphicon glyphicon-home"></span> Home</a></li>
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Master<span class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                <li><a runat="server" href="~/Salhead.aspx">Salary Head</a></li>
-                                <li><a runat="server" href="~/Salinfo.aspx">Salary Info</a></li>
-                                <li><a runat="server" href="~/Salgen.aspx">Salary Generate</a></li>
-                                <li><a runat="server" href="~/attendance.aspx">Attendence</a></li>
-                            </ul>
-                        </li>
-                        <li><a runat="server" href="~/About"><span class="glyphicon glyphicon-info-sign"></span>  About</a></li>
-                        <li><a runat="server" href="~/Contact"><span class="glyphicon glyphicon-phone"></span> Contact</a></li>
-                        <!--
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Page 4
-                                <span class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                <li><a runat="server" href="#">Page 1-1</a></li>
-                                <li><a runat="server" href="#">Page 1-2</a></li>
-                                <li><a runat="server" href="#">Page 1-3</a></li>
-                            </ul>
-                        </li>
-                        -->
+                        <li><a runat="server" href="~/">Home</a></li>
+                        <li><a runat="server" href="~/Home/Index.cshtml">Home MVC</a></li>
+                        <li><a runat="server" href="~/About">About</a></li>
+                        <li><a runat="server" href="~/Contact">Contact</a></li>
                     </ul>
-                    
                 </div>
             </div>
         </div>
@@ -83,27 +63,10 @@
             </asp:ContentPlaceHolder>
             <hr />
             <footer>
-                <asp:UpdatePanel ID="UpdatePanel1" runat="server">
-                    <ContentTemplate>
-                            
-                        <label><%=DateTime.Now.ToString("F") %></label><p>&copy; <%: DateTime.Now.Year %> - FrontLook.Inc</p>
-                        <asp:Timer runat="server" ID="timer" Interval="1000"/>
-                    </ContentTemplate>
-                    <Triggers>
-                        <asp:AsyncPostBackTrigger ControlID="timer" EventName="Tick"></asp:AsyncPostBackTrigger>
-                    </Triggers>
-                </asp:UpdatePanel>
+                <p>&copy; <%: DateTime.Now.Year %> - My ASP.NET Application</p>
             </footer>
         </div>
 
     </form>
 </body>
-<script>
-    $(document).ready(function () {
-        $(".dropdown").hover(function () {
-            //toggle the open class (on/off)
-            $(this).toggleClass("open");
-        });
-    })
-</script>
 </html>
