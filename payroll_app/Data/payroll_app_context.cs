@@ -26,5 +26,7 @@ namespace payroll_app.Data
         }
 
         public DbSet<payroll_app.Models.repository.Department> Department { get; set; }
+
+        public DbSet<payroll_app.Models.repository.WorkerType> WorkerType { get; set; }
     }
 }

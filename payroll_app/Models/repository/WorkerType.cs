@@ -18,7 +18,7 @@ namespace payroll_app.Models.repository
 
         }
 
-        public WorkerType(int id, string categoryName, string categoryCode, int arrangeOrder)
+        public WorkerType(int id, string categoryName, string categoryCode, string arrangeOrder)
         {
             Id = id;
             CategoryName = categoryName;
@@ -50,7 +50,7 @@ namespace payroll_app.Models.repository
         [Column("Arrange Order")]
         [Display(Name = "Arrange Order")]
         //[Required]
-        public int ArrangeOrder { get; set; }
+        public string ArrangeOrder { get; set; }
 
     }
 }
