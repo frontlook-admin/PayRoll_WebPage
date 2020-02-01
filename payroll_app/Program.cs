@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace PayRoll_JMJPL_App
+namespace payroll_app
 {
     public class Program
     {

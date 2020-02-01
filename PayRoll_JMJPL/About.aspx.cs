@@ -7,6 +7,7 @@ using System.Web.UI.WebControls;
 
 namespace PayRoll_JMJPL
 {
+    /// <inheritdoc />
     public partial class About : Page
     {
         protected void Page_Load(object sender, EventArgs e)

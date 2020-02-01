@@ -8,9 +8,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PayRoll_JMJPL_App", "PayRoll_JMJPL_App\PayRoll_JMJPL_App.csproj", "{B018172C-2DFA-467D-B9CA-3E06F476E469}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PayRoll_JMJPL", "PayRoll_JMJPL\PayRoll_JMJPL.csproj", "{496E2382-C572-40BC-ABC5-11BC1B8DD99C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "payroll_app", "payroll_app\payroll_app.csproj", "{F1CC22A6-67CC-4EF5-9CF7-00099B8F9380}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,14 +18,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B018172C-2DFA-467D-B9CA-3E06F476E469}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B018172C-2DFA-467D-B9CA-3E06F476E469}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B018172C-2DFA-467D-B9CA-3E06F476E469}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B018172C-2DFA-467D-B9CA-3E06F476E469}.Release|Any CPU.Build.0 = Release|Any CPU
 		{496E2382-C572-40BC-ABC5-11BC1B8DD99C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{496E2382-C572-40BC-ABC5-11BC1B8DD99C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{496E2382-C572-40BC-ABC5-11BC1B8DD99C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{496E2382-C572-40BC-ABC5-11BC1B8DD99C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1CC22A6-67CC-4EF5-9CF7-00099B8F9380}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1CC22A6-67CC-4EF5-9CF7-00099B8F9380}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1CC22A6-67CC-4EF5-9CF7-00099B8F9380}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1CC22A6-67CC-4EF5-9CF7-00099B8F9380}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

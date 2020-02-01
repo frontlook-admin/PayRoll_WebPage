@@ -4,9 +4,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using PayRoll_JMJPL_App.Models;
+using payroll_app.Models;
 
-namespace PayRoll_JMJPL_App.Controllers
+namespace payroll_app.Controllers
 {
     public class HomeController : Controller
     {

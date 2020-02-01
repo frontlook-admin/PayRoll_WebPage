@@ -1,6 +1,6 @@
 using System;
 
-namespace PayRoll_JMJPL_App.Models
+namespace payroll_app.Models
 {
     public class ErrorViewModel
     {

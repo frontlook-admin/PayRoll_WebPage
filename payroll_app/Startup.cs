@@ -10,9 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using PayRoll_JMJPL_App.Data;
+using payroll_app.Data;
 
-namespace PayRoll_JMJPL_App
+namespace payroll_app
 {
     public class Startup
     {
@@ -33,10 +33,10 @@ namespace PayRoll_JMJPL_App
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddEntityFrameworkMySql();
+            services.AddMvcCore().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddDbContext<PayrollDbContext>(options =>
-                options.UseMySql(Configuration.GetConnectionString("Default")));
+            services.AddEntityFrameworkMySql();
+            services.AddDbContext<payroll_app_context>(o => o.UseMySql(Configuration.GetConnectionString("Default")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
