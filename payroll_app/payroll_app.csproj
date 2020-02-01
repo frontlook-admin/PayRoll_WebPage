@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>frontlook_signature.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
 
@@ -16,6 +18,13 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.4" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.2.6" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql.Design" Version="1.1.0" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Reference Include="frontlook_dotnetcore_library">
+      <HintPath>..\..\..\frontlook_dotnetframework_library\frontlook_dotnetcore_library\bin\Release\netcoreapp2.2\frontlook_dotnetcore_library.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

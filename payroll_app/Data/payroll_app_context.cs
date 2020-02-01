@@ -12,6 +12,7 @@ namespace payroll_app.Data
 
         public DbSet<Department> Departments;
         public DbSet<WorkerType> WorkerTypes;
+        public DbSet<Grade> Grades;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -23,10 +24,16 @@ namespace payroll_app.Data
             modelBuilder.Entity<WorkerType>().HasKey(s => s.Id);
             modelBuilder.Entity<WorkerType>().HasAlternateKey(s => s.CategoryName);
             modelBuilder.Entity<WorkerType>().HasAlternateKey(s => s.CategoryCode);
+
+            modelBuilder.Entity<Grade>().HasKey(s => s.Id);
+            modelBuilder.Entity<Grade>().HasAlternateKey(s => s.GradeName);
+            modelBuilder.Entity<Grade>().HasAlternateKey(s => s.GradeCode);
         }
 
         public DbSet<payroll_app.Models.repository.Department> Department { get; set; }
 
         public DbSet<payroll_app.Models.repository.WorkerType> WorkerType { get; set; }
+        
+        public DbSet<Grade> Grade { get; set; }
     }
 }

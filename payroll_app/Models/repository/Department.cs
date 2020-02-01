@@ -17,7 +17,7 @@ namespace payroll_app.Models.repository
 
         }
 
-        public Department(int id, string departmentName, string departmentCode, string arrangeOrder)
+        public Department(int id, string departmentName, string departmentCode, int arrangeOrder)
         {
             Id = id;
             DepartmentName = departmentName;
@@ -50,6 +50,6 @@ namespace payroll_app.Models.repository
         [RegularExpression("\\d", ErrorMessage = "Can accept only digits..!!",
             MatchTimeoutInMilliseconds = 1000)]
         //[Required]
-        public string ArrangeOrder { get; set; }
+        public int ArrangeOrder { get; set; }
     }
 }
