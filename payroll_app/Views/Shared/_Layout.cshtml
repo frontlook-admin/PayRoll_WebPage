@@ -28,6 +28,20 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Master Create
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" asp-controller="Employees" asp-action="Index">Employees</a>
+                                <a class="dropdown-item" asp-controller="AttendanceRegisters" asp-action="Index">Attendance</a>
+                                <a class="dropdown-item" asp-controller="Departments" asp-action="Index">Departments</a>
+                                <a class="dropdown-item" asp-controller="Grades" asp-action="Index">Grades</a>
+                                <a class="dropdown-item" asp-controller="WorkerTypes" asp-action="Index">Worker Types</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Something else here</a>
+                            </div>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
