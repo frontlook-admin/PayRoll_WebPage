@@ -186,8 +186,12 @@
     <Content Include="Scripts\WebForms\WebParts.js" />
     <Content Include="Scripts\WebForms\WebUIValidation.js" />
     <Content Include="Site.Master" />
-    <Content Include="sql\000-department.sql" />
-    <Content Include="sql\001-worker type.sql" />
+    <Content Include="sql\000-__efmigrationshistory.sql" />
+    <Content Include="sql\001-department.sql" />
+    <Content Include="sql\002-employee.sql" />
+    <Content Include="sql\003-grade.sql" />
+    <Content Include="sql\004-workertype.sql" />
+    <Content Include="sql\005-attendanceregister.sql" />
     <Content Include="ViewSwitcher.ascx" />
     <Content Include="Web.config" />
     <Content Include="Bundle.config" />

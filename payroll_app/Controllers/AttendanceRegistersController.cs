@@ -1,28 +1,32 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using payroll_app.Data;
 using payroll_app.Models.repository;
 
 namespace payroll_app.Controllers
 {
-    public class WorkerTypesController : Controller
+    public class AttendanceRegistersController : Controller
     {
         private readonly payroll_app_context _context;
 
-        public WorkerTypesController(payroll_app_context context)
+        public AttendanceRegistersController(payroll_app_context context)
         {
             _context = context;
         }
 
-        // GET: WorkerTypes
+        // GET: AttendanceRegisters
         public async Task<IActionResult> Index()
         {
-            return View(await _context.WorkerType.ToListAsync());
+            var payroll_app_context = _context.AttendanceRegister.Include(a => a.Employees);
+            return View(await payroll_app_context.ToListAsync());
         }
 
-        // GET: WorkerTypes/Details/5
+        // GET: AttendanceRegisters/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -30,39 +34,42 @@ namespace payroll_app.Controllers
                 return NotFound();
             }
 
-            var workerType = await _context.WorkerType
+            var attendanceRegister = await _context.AttendanceRegister
+                .Include(a => a.Employees)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (workerType == null)
+            if (attendanceRegister == null)
             {
                 return NotFound();
             }
 
-            return View(workerType);
+            return View(attendanceRegister);
         }
 
-        // GET: WorkerTypes/Create
+        // GET: AttendanceRegisters/Create
         public IActionResult Create()
         {
+            ViewData["EmployeeId"] = new SelectList(_context.Employee, "Id", "Address1");
             return View();
         }
 
-        // POST: WorkerTypes/Create
+        // POST: AttendanceRegisters/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CategoryName,CategoryCode,ArrangeOrder")] WorkerType workerType)
+        public async Task<IActionResult> Create([Bind("Id,EmployeeId,Attendance,AttendanceTime")] AttendanceRegister attendanceRegister)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(workerType);
+                _context.Add(attendanceRegister);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(workerType);
+            ViewData["EmployeeId"] = new SelectList(_context.Employee, "Id", "Address1", attendanceRegister.EmployeeId);
+            return View(attendanceRegister);
         }
 
-        // GET: WorkerTypes/Edit/5
+        // GET: AttendanceRegisters/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -70,22 +77,23 @@ namespace payroll_app.Controllers
                 return NotFound();
             }
 
-            var workerType = await _context.WorkerType.FindAsync(id);
-            if (workerType == null)
+            var attendanceRegister = await _context.AttendanceRegister.FindAsync(id);
+            if (attendanceRegister == null)
             {
                 return NotFound();
             }
-            return View(workerType);
+            ViewData["EmployeeId"] = new SelectList(_context.Employee, "Id", "Address1", attendanceRegister.EmployeeId);
+            return View(attendanceRegister);
         }
 
-        // POST: WorkerTypes/Edit/5
+        // POST: AttendanceRegisters/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CategoryName,CategoryCode,ArrangeOrder")] WorkerType workerType)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,EmployeeId,Attendance,AttendanceTime")] AttendanceRegister attendanceRegister)
         {
-            if (id != workerType.Id)
+            if (id != attendanceRegister.Id)
             {
                 return NotFound();
             }
@@ -94,12 +102,12 @@ namespace payroll_app.Controllers
             {
                 try
                 {
-                    _context.Update(workerType);
+                    _context.Update(attendanceRegister);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!WorkerTypeExists(workerType.Id))
+                    if (!AttendanceRegisterExists(attendanceRegister.Id))
                     {
                         return NotFound();
                     }
@@ -110,10 +118,11 @@ namespace payroll_app.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(workerType);
+            ViewData["EmployeeId"] = new SelectList(_context.Employee, "Id", "Address1", attendanceRegister.EmployeeId);
+            return View(attendanceRegister);
         }
 
-        // GET: WorkerTypes/Delete/5
+        // GET: AttendanceRegisters/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -121,30 +130,31 @@ namespace payroll_app.Controllers
                 return NotFound();
             }
 
-            var workerType = await _context.WorkerType
+            var attendanceRegister = await _context.AttendanceRegister
+                .Include(a => a.Employees)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (workerType == null)
+            if (attendanceRegister == null)
             {
                 return NotFound();
             }
 
-            return View(workerType);
+            return View(attendanceRegister);
         }
 
-        // POST: WorkerTypes/Delete/5
+        // POST: AttendanceRegisters/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var workerType = await _context.WorkerType.FindAsync(id);
-            _context.WorkerType.Remove(workerType);
+            var attendanceRegister = await _context.AttendanceRegister.FindAsync(id);
+            _context.AttendanceRegister.Remove(attendanceRegister);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool WorkerTypeExists(int id)
+        private bool AttendanceRegisterExists(int id)
         {
-            return _context.WorkerType.Any(e => e.Id == id);
+            return _context.AttendanceRegister.Any(e => e.Id == id);
         }
     }
 }

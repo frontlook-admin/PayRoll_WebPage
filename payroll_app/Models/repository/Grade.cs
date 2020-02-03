@@ -1,23 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace payroll_app.Models.repository
 {
     [Table("Grade")]
+    [Display(Name = "Grade", Description = "Stores Grade Details.")]
     public class Grade
     {
-        public Grade()
+        public Grade(int id, string gradeName, string gradeCode, string arrangeOrder)
         {
-            
-        }
-
-        public Grade(string id, string gradeName, string gradeCode, int arrangeOrder)
-        {
-            
+            Id = id;
+            GradeName = gradeName;
+            GradeCode = gradeCode;
+            ArrangeOrder = arrangeOrder;
         }
 
         [Key]
@@ -26,25 +21,25 @@ namespace payroll_app.Models.repository
         public int Id { get; set; }
 
         [Key]
-        [MaxLength(30)]
-        [Column("Grade Name")]
+        [MaxLength(30, ErrorMessage = "Exceeded Character Limit..!!")]
+        [Column("GradeName")]
         [Display(Name = "Grade Name")]
         [Required]
         public string GradeName { get; set; }
 
         [Key]
-        [MaxLength(30)]
-        [Column("Grade Code")]
+        [MaxLength(30, ErrorMessage = "Exceeded Character Limit..!!")]
+        [Column("GradeCode")]
         [Display(Name = "Grade Code")]
         [Required]
         public string GradeCode { get; set; }
 
-        [MaxLength(11)]
+        [MaxLength(11, ErrorMessage = "Exceeded Character Limit..!!")]
         [RegularExpression("\\d", ErrorMessage = "Can accept only digits..!!",
             MatchTimeoutInMilliseconds = 1000)]
-        [Column("Arrange Order")]
+        [Column("ArrangeOrder")]
         [Display(Name = "Arrange Order")]
         //[Required]
-        public int ArrangeOrder { get; set; }
+        public string ArrangeOrder { get; set; }
     }
 }

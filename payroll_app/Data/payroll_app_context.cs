@@ -13,6 +13,8 @@ namespace payroll_app.Data
         public DbSet<Department> Departments;
         public DbSet<WorkerType> WorkerTypes;
         public DbSet<Grade> Grades;
+        public DbSet<Employee> Employees;
+        public DbSet<AttendanceRegister> AttendanceRegisters;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -28,12 +30,19 @@ namespace payroll_app.Data
             modelBuilder.Entity<Grade>().HasKey(s => s.Id);
             modelBuilder.Entity<Grade>().HasAlternateKey(s => s.GradeName);
             modelBuilder.Entity<Grade>().HasAlternateKey(s => s.GradeCode);
+
+            modelBuilder.Entity<Employee>().HasKey(s => s.Id);
+            modelBuilder.Entity<Employee>().HasAlternateKey(s => s.PrimaryMobileNo);
+            modelBuilder.Entity<Employee>().HasAlternateKey(s => s.SecondaryMobileNo);
+            modelBuilder.Entity<Employee>().HasAlternateKey(s => s.EmailId);
+
+            modelBuilder.Entity<AttendanceRegister>().HasKey(s => s.Id);
         }
 
-        public DbSet<payroll_app.Models.repository.Department> Department { get; set; }
-
-        public DbSet<payroll_app.Models.repository.WorkerType> WorkerType { get; set; }
-        
+        public DbSet<Department> Department { get; set; }
+        public DbSet<WorkerType> WorkerType { get; set; }
         public DbSet<Grade> Grade { get; set; }
+        public DbSet<Employee> Employee { get; set; }
+        public DbSet<AttendanceRegister> AttendanceRegister { get; set; }
     }
 }

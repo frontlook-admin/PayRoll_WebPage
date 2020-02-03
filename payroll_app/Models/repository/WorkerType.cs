@@ -1,24 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
-using JetBrains.Annotations;
 
 namespace payroll_app.Models.repository
 {
-    [Table("Worker Type")]
+    [Table("WorkerType")]
+    [Display(Name = "Worker Type", Description = "Stores Worker Type Details.")]
     public class WorkerType
     {
         //public IEnumerable<WorkerType> WorkerTypes;
 
-        public WorkerType()
-        {
-
-        }
-
-        public WorkerType(int id, string categoryName, string categoryCode, int arrangeOrder)
+        public WorkerType(int id, string categoryName, string categoryCode, string arrangeOrder)
         {
             Id = id;
             CategoryName = categoryName;
@@ -32,26 +23,26 @@ namespace payroll_app.Models.repository
         public int Id { get; set; }
 
         [Key]
-        [MaxLength(30)]
-        [Column("Category Name")]
+        [MaxLength(30, ErrorMessage = "Exceeded Character Limit..!!")]
+        [Column("CategoryName")]
         [Display(Name = "Category Name")]
         [Required]
         public string CategoryName { get; set; }
 
         [Key]
-        [MaxLength(30)]
-        [Column("Category Code")]
+        [MaxLength(30, ErrorMessage = "Exceeded Character Limit..!!")]
+        [Column("CategoryCode")]
         [Display(Name = "Category Code")]
         [Required]
         public string CategoryCode { get; set; }
 
-        [MaxLength(11)]
+        [MaxLength(11, ErrorMessage = "Exceeded Character Limit..!!")]
         [RegularExpression("\\d", ErrorMessage = "Can accept only digits..!!",
             MatchTimeoutInMilliseconds = 1000)]
-        [Column("Arrange Order")]
+        [Column("ArrangeOrder")]
         [Display(Name = "Arrange Order")]
         //[Required]
-        public int ArrangeOrder { get; set; }
+        public string ArrangeOrder { get; set; }
 
     }
 }

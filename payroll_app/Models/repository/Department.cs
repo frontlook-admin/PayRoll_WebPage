@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace payroll_app.Models.repository
 {
     [Table("Department")]
+    [Display(Name = "Department",Description = "Stores Department Details.")]
     public class Department
     {
         //public IEnumerable<Department> Departments;
@@ -32,20 +29,20 @@ namespace payroll_app.Models.repository
 
         [Key]
         [MaxLength(30)]
-        [Column("Department Name")]
+        [Column("DepartmentName")]
         [Display(Name = "Department Name")]
         [Required]
         public string DepartmentName { get; set; }
 
         [Key]
         [MaxLength(30)]
-        [Column("Department Code")]
+        [Column("DepartmentCode")]
         [Display(Name = "Department Code")]
         [Required]
         public string DepartmentCode { get; set; }
 
         [MaxLength(11)]
-        [Column("Arrange Order")]
+        [Column("ArrangeOrder")]
         [Display(Name = "Arrange Order")]
         [RegularExpression("\\d", ErrorMessage = "Can accept only digits..!!",
             MatchTimeoutInMilliseconds = 1000)]

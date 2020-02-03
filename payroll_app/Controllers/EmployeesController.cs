@@ -1,28 +1,31 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using payroll_app.Data;
 using payroll_app.Models.repository;
 
 namespace payroll_app.Controllers
 {
-    public class WorkerTypesController : Controller
+    public class EmployeesController : Controller
     {
         private readonly payroll_app_context _context;
 
-        public WorkerTypesController(payroll_app_context context)
+        public EmployeesController(payroll_app_context context)
         {
             _context = context;
         }
 
-        // GET: WorkerTypes
+        // GET: Employees
         public async Task<IActionResult> Index()
         {
-            return View(await _context.WorkerType.ToListAsync());
+            return View(await _context.Employee.ToListAsync());
         }
 
-        // GET: WorkerTypes/Details/5
+        // GET: Employees/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -30,39 +33,57 @@ namespace payroll_app.Controllers
                 return NotFound();
             }
 
-            var workerType = await _context.WorkerType
+            var employee = await _context.Employee
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (workerType == null)
+            if (employee == null)
             {
                 return NotFound();
             }
 
-            return View(workerType);
+            return View(employee);
         }
 
-        // GET: WorkerTypes/Create
+        // GET: Employees/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: WorkerTypes/Create
+        public IActionResult Create2()
+        {
+            return View();
+        }
+
+        // POST: Employees/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CategoryName,CategoryCode,ArrangeOrder")] WorkerType workerType)
+        public async Task<IActionResult> Create([Bind("Id,EmployeePhoto,FirstName,MiddleName,LastName,FullName,Gender,PrimaryMobileNo,SecondaryMobileNo,AreaStdCode,PhoneNo,EmailId,Address1,Address2,Address3,City,District,Pin,PostOffice,PoliceStation")] Employee employee)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(workerType);
+                _context.Add(employee);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(workerType);
+            return View(employee);
         }
 
-        // GET: WorkerTypes/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create2([Bind("Id,EmployeePhoto,FirstName,MiddleName,LastName,FullName,Gender,PrimaryMobileNo,SecondaryMobileNo,AreaStdCode,PhoneNo,EmailId,Address1,Address2,Address3,City,District,Pin,PostOffice,PoliceStation")] Employee employee)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(employee);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(employee);
+        }
+
+        // GET: Employees/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -70,22 +91,22 @@ namespace payroll_app.Controllers
                 return NotFound();
             }
 
-            var workerType = await _context.WorkerType.FindAsync(id);
-            if (workerType == null)
+            var employee = await _context.Employee.FindAsync(id);
+            if (employee == null)
             {
                 return NotFound();
             }
-            return View(workerType);
+            return View(employee);
         }
 
-        // POST: WorkerTypes/Edit/5
+        // POST: Employees/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CategoryName,CategoryCode,ArrangeOrder")] WorkerType workerType)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,EmployeePhoto,FirstName,MiddleName,LastName,FullName,Gender,PrimaryMobileNo,SecondaryMobileNo,AreaStdCode,PhoneNo,EmailId,Address1,Address2,Address3,City,District,Pin,PostOffice,PoliceStation")] Employee employee)
         {
-            if (id != workerType.Id)
+            if (id != employee.Id)
             {
                 return NotFound();
             }
@@ -94,12 +115,12 @@ namespace payroll_app.Controllers
             {
                 try
                 {
-                    _context.Update(workerType);
+                    _context.Update(employee);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!WorkerTypeExists(workerType.Id))
+                    if (!EmployeeExists(employee.Id))
                     {
                         return NotFound();
                     }
@@ -110,10 +131,10 @@ namespace payroll_app.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(workerType);
+            return View(employee);
         }
 
-        // GET: WorkerTypes/Delete/5
+        // GET: Employees/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -121,30 +142,30 @@ namespace payroll_app.Controllers
                 return NotFound();
             }
 
-            var workerType = await _context.WorkerType
+            var employee = await _context.Employee
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (workerType == null)
+            if (employee == null)
             {
                 return NotFound();
             }
 
-            return View(workerType);
+            return View(employee);
         }
 
-        // POST: WorkerTypes/Delete/5
+        // POST: Employees/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var workerType = await _context.WorkerType.FindAsync(id);
-            _context.WorkerType.Remove(workerType);
+            var employee = await _context.Employee.FindAsync(id);
+            _context.Employee.Remove(employee);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool WorkerTypeExists(int id)
+        private bool EmployeeExists(int id)
         {
-            return _context.WorkerType.Any(e => e.Id == id);
+            return _context.Employee.Any(e => e.Id == id);
         }
     }
 }
