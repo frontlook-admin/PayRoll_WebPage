@@ -115,7 +115,6 @@ namespace payroll_app.Models.repository
         [Required]
         public string PrimaryMobileNo { get; set; }
 
-        [Key]
         [Column("SecondaryMobileNo", Order = 4)]
         [Display(Name = "Secondary Mobile No.")]
         [MaxLength(10, ErrorMessage = "Mobile number can not be more than 10 digits..!!")]
@@ -138,7 +137,6 @@ namespace payroll_app.Models.repository
             MatchTimeoutInMilliseconds = 1000)]
         public string PhoneNo { get; set; }
 
-        [Key]
         [Column("EmailId", Order = 5)]
         [Display(Name = "Email Id.")]
         [MaxLength(400, ErrorMessage = "Exceeded Character Limit..!!")]
