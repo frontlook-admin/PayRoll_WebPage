@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +24,8 @@ namespace payroll_app.Controllers
         // GET: Employees
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Employee.ToListAsync());
+            var payroll_app_context = _context.Employee.Include(e => e.Department).Include(e => e.Grade).Include(e => e.WorkerType);
+            return View(await payroll_app_context.ToListAsync());
         }
 
         // GET: Employees/Details/5
@@ -34,6 +37,9 @@ namespace payroll_app.Controllers
             }
 
             var employee = await _context.Employee
+                .Include(e => e.Department)
+                .Include(e => e.Grade)
+                .Include(e => e.WorkerType)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (employee == null)
             {
@@ -46,11 +52,9 @@ namespace payroll_app.Controllers
         // GET: Employees/Create
         public IActionResult Create()
         {
-            return View();
-        }
-
-        public IActionResult Create2()
-        {
+            ViewData["DepartmentId"] = new SelectList(_context.Department, "DepartmentId", "DepartmentCode");
+            ViewData["GradeId"] = new SelectList(_context.Grade, "GradeId", "GradeCode");
+            ViewData["WorkerTypeId"] = new SelectList(_context.WorkerType, "WorkerTypeId", "WorkerTypeCode");
             return View();
         }
 
@@ -59,27 +63,29 @@ namespace payroll_app.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,EmployeePhoto,FirstName,MiddleName,LastName,FullName,Gender,PrimaryMobileNo,SecondaryMobileNo,AreaStdCode,PhoneNo,EmailId,Address1,Address2,Address3,City,District,Pin,PostOffice,PoliceStation")] Employee employee)
+        public async Task<IActionResult> Create([Bind("Id,EmployeePhoto,FirstName,MiddleName,LastName,FullName,Gender,PrimaryMobileNo,SecondaryMobileNo,AreaStdCode,PhoneNo,EmailId,Address1,Address2,Address3,City,District,Pin,PostOffice,PoliceStation,DepartmentId,GradeId,WorkerTypeId")] Employee employee, IFormFile EmployeePhoto)
         {
             if (ModelState.IsValid)
             {
+                if (EmployeePhoto != null)
+                {
+                    if (EmployeePhoto.Length > 0)
+                        //Convert Image to byte and save to database
+                    {
+                        using (var ms1 = new MemoryStream())
+                        {
+                            await EmployeePhoto.CopyToAsync(ms1);
+                            employee.EmployeePhoto = ms1.ToArray();
+                        }
+                    }
+                }
                 _context.Add(employee);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(employee);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create2([Bind("Id,EmployeePhoto,FirstName,MiddleName,LastName,FullName,Gender,PrimaryMobileNo,SecondaryMobileNo,AreaStdCode,PhoneNo,EmailId,Address1,Address2,Address3,City,District,Pin,PostOffice,PoliceStation")] Employee employee)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(employee);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
+            ViewData["DepartmentId"] = new SelectList(_context.Department, "DepartmentId", "DepartmentCode", employee.DepartmentId);
+            ViewData["GradeId"] = new SelectList(_context.Grade, "GradeId", "GradeCode", employee.GradeId);
+            ViewData["WorkerTypeId"] = new SelectList(_context.WorkerType, "WorkerTypeId", "WorkerTypeCode", employee.WorkerTypeId);
             return View(employee);
         }
 
@@ -96,6 +102,9 @@ namespace payroll_app.Controllers
             {
                 return NotFound();
             }
+            ViewData["DepartmentId"] = new SelectList(_context.Department, "DepartmentId", "DepartmentCode", employee.DepartmentId);
+            ViewData["GradeId"] = new SelectList(_context.Grade, "GradeId", "GradeCode", employee.GradeId);
+            ViewData["WorkerTypeId"] = new SelectList(_context.WorkerType, "WorkerTypeId", "WorkerTypeCode", employee.WorkerTypeId);
             return View(employee);
         }
 
@@ -104,7 +113,7 @@ namespace payroll_app.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,EmployeePhoto,FirstName,MiddleName,LastName,FullName,Gender,PrimaryMobileNo,SecondaryMobileNo,AreaStdCode,PhoneNo,EmailId,Address1,Address2,Address3,City,District,Pin,PostOffice,PoliceStation")] Employee employee)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,EmployeePhoto,FirstName,MiddleName,LastName,FullName,Gender,PrimaryMobileNo,SecondaryMobileNo,AreaStdCode,PhoneNo,EmailId,Address1,Address2,Address3,City,District,Pin,PostOffice,PoliceStation,DepartmentId,GradeId,WorkerTypeId")] Employee employee)
         {
             if (id != employee.Id)
             {
@@ -131,6 +140,9 @@ namespace payroll_app.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["DepartmentId"] = new SelectList(_context.Department, "DepartmentId", "DepartmentCode", employee.DepartmentId);
+            ViewData["GradeId"] = new SelectList(_context.Grade, "GradeId", "GradeCode", employee.GradeId);
+            ViewData["WorkerTypeId"] = new SelectList(_context.WorkerType, "WorkerTypeId", "WorkerTypeCode", employee.WorkerTypeId);
             return View(employee);
         }
 
@@ -143,6 +155,9 @@ namespace payroll_app.Controllers
             }
 
             var employee = await _context.Employee
+                .Include(e => e.Department)
+                .Include(e => e.Grade)
+                .Include(e => e.WorkerType)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (employee == null)
             {

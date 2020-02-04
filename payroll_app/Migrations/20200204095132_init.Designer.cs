@@ -9,7 +9,7 @@ using payroll_app.Data;
 namespace payroll_app.Migrations
 {
     [DbContext(typeof(payroll_app_context))]
-    [Migration("20200203081204_init")]
+    [Migration("20200204095132_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,11 +42,11 @@ namespace payroll_app.Migrations
 
             modelBuilder.Entity("payroll_app.Models.repository.Department", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("DepartmentId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("ID");
+                        .HasColumnName("DepartmentId");
 
-                    b.Property<int>("ArrangeOrder")
+                    b.Property<string>("ArrangeOrder")
                         .HasColumnName("ArrangeOrder")
                         .HasMaxLength(11);
 
@@ -60,13 +60,13 @@ namespace payroll_app.Migrations
                         .HasColumnName("DepartmentName")
                         .HasMaxLength(30);
 
-                    b.HasKey("Id");
+                    b.HasKey("DepartmentId");
 
                     b.HasAlternateKey("DepartmentCode");
 
                     b.HasAlternateKey("DepartmentName");
 
-                    b.HasAlternateKey("DepartmentCode", "DepartmentName", "Id");
+                    b.HasAlternateKey("DepartmentCode", "DepartmentId", "DepartmentName");
 
                     b.ToTable("Department");
                 });
@@ -99,6 +99,8 @@ namespace payroll_app.Migrations
                         .HasColumnName("City")
                         .HasMaxLength(100);
 
+                    b.Property<int>("DepartmentId");
+
                     b.Property<string>("District")
                         .HasColumnName("District")
                         .HasMaxLength(100);
@@ -124,6 +126,8 @@ namespace payroll_app.Migrations
                         .HasColumnName("Gender")
                         .HasMaxLength(20);
 
+                    b.Property<int>("GradeId");
+
                     b.Property<string>("LastName")
                         .HasColumnName("LastName")
                         .HasMaxLength(200);
@@ -133,6 +137,7 @@ namespace payroll_app.Migrations
                         .HasMaxLength(200);
 
                     b.Property<string>("PhoneNo")
+                        .HasColumnName("PhoneNo")
                         .HasMaxLength(8);
 
                     b.Property<string>("Pin")
@@ -160,6 +165,8 @@ namespace payroll_app.Migrations
                         .HasColumnName("SecondaryMobileNo")
                         .HasMaxLength(10);
 
+                    b.Property<int>("WorkerTypeId");
+
                     b.HasKey("Id");
 
                     b.HasAlternateKey("EmailId");
@@ -170,14 +177,20 @@ namespace payroll_app.Migrations
 
                     b.HasAlternateKey("EmailId", "Id", "PrimaryMobileNo", "SecondaryMobileNo");
 
+                    b.HasIndex("DepartmentId");
+
+                    b.HasIndex("GradeId");
+
+                    b.HasIndex("WorkerTypeId");
+
                     b.ToTable("Employee");
                 });
 
             modelBuilder.Entity("payroll_app.Models.repository.Grade", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("GradeId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("ID");
+                        .HasColumnName("GradeId");
 
                     b.Property<string>("ArrangeOrder")
                         .HasColumnName("ArrangeOrder")
@@ -193,44 +206,44 @@ namespace payroll_app.Migrations
                         .HasColumnName("GradeName")
                         .HasMaxLength(30);
 
-                    b.HasKey("Id");
+                    b.HasKey("GradeId");
 
                     b.HasAlternateKey("GradeCode");
 
                     b.HasAlternateKey("GradeName");
 
-                    b.HasAlternateKey("GradeCode", "GradeName", "Id");
+                    b.HasAlternateKey("GradeCode", "GradeId", "GradeName");
 
                     b.ToTable("Grade");
                 });
 
             modelBuilder.Entity("payroll_app.Models.repository.WorkerType", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("WorkerTypeId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("ID");
+                        .HasColumnName("WorkerTypeId");
 
                     b.Property<string>("ArrangeOrder")
                         .HasColumnName("ArrangeOrder")
                         .HasMaxLength(11);
 
-                    b.Property<string>("CategoryCode")
+                    b.Property<string>("WorkerTypeCode")
                         .IsRequired()
-                        .HasColumnName("CategoryCode")
+                        .HasColumnName("WorkerTypeCode")
                         .HasMaxLength(30);
 
-                    b.Property<string>("CategoryName")
+                    b.Property<string>("WorkerTypeName")
                         .IsRequired()
-                        .HasColumnName("CategoryName")
+                        .HasColumnName("WorkerTypeName")
                         .HasMaxLength(30);
 
-                    b.HasKey("Id");
+                    b.HasKey("WorkerTypeId");
 
-                    b.HasAlternateKey("CategoryCode");
+                    b.HasAlternateKey("WorkerTypeCode");
 
-                    b.HasAlternateKey("CategoryName");
+                    b.HasAlternateKey("WorkerTypeName");
 
-                    b.HasAlternateKey("CategoryCode", "CategoryName", "Id");
+                    b.HasAlternateKey("WorkerTypeCode", "WorkerTypeId", "WorkerTypeName");
 
                     b.ToTable("WorkerType");
                 });
@@ -238,8 +251,26 @@ namespace payroll_app.Migrations
             modelBuilder.Entity("payroll_app.Models.repository.AttendanceRegister", b =>
                 {
                     b.HasOne("payroll_app.Models.repository.Employee", "Employees")
-                        .WithMany("SalaryHeads")
+                        .WithMany("AttendanceRegisters")
                         .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("payroll_app.Models.repository.Employee", b =>
+                {
+                    b.HasOne("payroll_app.Models.repository.Department", "Department")
+                        .WithMany("Employees")
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("payroll_app.Models.repository.Grade", "Grade")
+                        .WithMany("Employees")
+                        .HasForeignKey("GradeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("payroll_app.Models.repository.WorkerType", "WorkerType")
+                        .WithMany("Employees")
+                        .HasForeignKey("WorkerTypeId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

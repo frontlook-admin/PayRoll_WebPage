@@ -1,6 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using payroll_app.Data;
 using payroll_app.Models.repository;
@@ -31,7 +34,7 @@ namespace payroll_app.Controllers
             }
 
             var workerType = await _context.WorkerType
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.WorkerTypeId == id);
             if (workerType == null)
             {
                 return NotFound();
@@ -51,7 +54,7 @@ namespace payroll_app.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CategoryName,CategoryCode,ArrangeOrder")] WorkerType workerType)
+        public async Task<IActionResult> Create([Bind("WorkerTypeId,WorkerTypeName,WorkerTypeCode,ArrangeOrder")] WorkerType workerType)
         {
             if (ModelState.IsValid)
             {
@@ -83,9 +86,9 @@ namespace payroll_app.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CategoryName,CategoryCode,ArrangeOrder")] WorkerType workerType)
+        public async Task<IActionResult> Edit(int id, [Bind("WorkerTypeId,WorkerTypeName,WorkerTypeCode,ArrangeOrder")] WorkerType workerType)
         {
-            if (id != workerType.Id)
+            if (id != workerType.WorkerTypeId)
             {
                 return NotFound();
             }
@@ -99,7 +102,7 @@ namespace payroll_app.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!WorkerTypeExists(workerType.Id))
+                    if (!WorkerTypeExists(workerType.WorkerTypeId))
                     {
                         return NotFound();
                     }
@@ -122,7 +125,7 @@ namespace payroll_app.Controllers
             }
 
             var workerType = await _context.WorkerType
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.WorkerTypeId == id);
             if (workerType == null)
             {
                 return NotFound();
@@ -144,7 +147,7 @@ namespace payroll_app.Controllers
 
         private bool WorkerTypeExists(int id)
         {
-            return _context.WorkerType.Any(e => e.Id == id);
+            return _context.WorkerType.Any(e => e.WorkerTypeId == id);
         }
     }
 }

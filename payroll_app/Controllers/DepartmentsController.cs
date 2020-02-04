@@ -34,7 +34,7 @@ namespace payroll_app.Controllers
             }
 
             var department = await _context.Department
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.DepartmentId == id);
             if (department == null)
             {
                 return NotFound();
@@ -54,7 +54,7 @@ namespace payroll_app.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,DepartmentName,DepartmentCode,ArrangeOrder")] Department department)
+        public async Task<IActionResult> Create([Bind("DepartmentId,DepartmentName,DepartmentCode,ArrangeOrder")] Department department)
         {
             if (ModelState.IsValid)
             {
@@ -86,9 +86,9 @@ namespace payroll_app.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,DepartmentName,DepartmentCode,ArrangeOrder")] Department department)
+        public async Task<IActionResult> Edit(int id, [Bind("DepartmentId,DepartmentName,DepartmentCode,ArrangeOrder")] Department department)
         {
-            if (id != department.Id)
+            if (id != department.DepartmentId)
             {
                 return NotFound();
             }
@@ -102,7 +102,7 @@ namespace payroll_app.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DepartmentExists(department.Id))
+                    if (!DepartmentExists(department.DepartmentId))
                     {
                         return NotFound();
                     }
@@ -125,7 +125,7 @@ namespace payroll_app.Controllers
             }
 
             var department = await _context.Department
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.DepartmentId == id);
             if (department == null)
             {
                 return NotFound();
@@ -147,7 +147,7 @@ namespace payroll_app.Controllers
 
         private bool DepartmentExists(int id)
         {
-            return _context.Department.Any(e => e.Id == id);
+            return _context.Department.Any(e => e.DepartmentId == id);
         }
     }
 }

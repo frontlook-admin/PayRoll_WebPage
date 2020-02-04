@@ -8,6 +8,10 @@ namespace payroll_app.Models.repository
     [Display(Name = "Employee",Description = "Stores Employee Basic Details.")]
     public class Employee
     {
+        public Employee()
+        {
+            
+        }
         // ReSharper disable once RedundantAssignment
         public Employee(byte[] employeePhoto, string firstName, string middleName, string lastName, string fullName,
             string gender, string primaryMobileNo, string secondaryMobileNo, string areaStdCode, string phoneNo,
@@ -70,22 +74,22 @@ namespace payroll_app.Models.repository
         [Column("FirstName")]
         [Display(Name = "First Name *")]
         [MaxLength(200, ErrorMessage = "Exceeded Character Limit..!!")]
-        [RegularExpression("\\w \\s", ErrorMessage = "Can accept only characters..!!",
+        [RegularExpression(@"^[[A-Za-z+[\s]+[A-Za-z]+]*]*", ErrorMessage = "Can accept only characters..!!",
             MatchTimeoutInMilliseconds = 1000)]
-        [Required]
+        [Required(ErrorMessage = "First Name id is required..!!")]
         public string FirstName { get; set; }
 
         [Column("MiddleName")]
         [Display(Name = "Middle Name")]
         [MaxLength(200, ErrorMessage = "Exceeded Character Limit..!!")]
-        [RegularExpression("\\w \\s", ErrorMessage = "Can accept only characters..!!",
+        [RegularExpression(@"^[[A-Za-z+[\s]+[A-Za-z]+]*]*", ErrorMessage = "Can accept only characters..!!",
             MatchTimeoutInMilliseconds = 1000)]
         public string MiddleName { get; set; }
 
         [Column("LastName")]
         [Display(Name = "Last Name")]
         [MaxLength(200, ErrorMessage = "Exceeded Character Limit..!!")]
-        [RegularExpression("\\w \\s", ErrorMessage = "Can accept only characters..!!",
+        [RegularExpression(@"^[[A-Za-z+[\s]+[A-Za-z]+]*]*", ErrorMessage = "Can accept only characters..!!",
             MatchTimeoutInMilliseconds = 1000)]
         public string LastName { get; set; }
         
@@ -97,7 +101,7 @@ namespace payroll_app.Models.repository
         [Column("Gender")]
         [Display(Name = "Gender *")]
         [MaxLength(20, ErrorMessage = "Exceeded Character Limit..!!")]
-        [RegularExpression("\\w \\s", ErrorMessage = "Can accept only characters..!!",
+        [RegularExpression(@"^[[A-Za-z+[\s]+[A-Za-z]+]*]*", ErrorMessage = "Can accept only characters..!!",
             MatchTimeoutInMilliseconds = 1000)]
         public string Gender { get; set; }
 
@@ -106,7 +110,7 @@ namespace payroll_app.Models.repository
         [Display(Name = "Primary Mobile No. *")]
         [MaxLength(10, ErrorMessage = "Mobile number can not be more than 10 digits..!!")]
         [MinLength(10, ErrorMessage = "Mobile number can not be less than 10 digits..!!")]
-        [RegularExpression("\\d", ErrorMessage = "Can accept only digits..!!",
+        [RegularExpression(@"^[[\d]{10}]*", ErrorMessage = "Can accept only digits..!!",
             MatchTimeoutInMilliseconds = 1000)]
         [Required]
         public string PrimaryMobileNo { get; set; }
@@ -116,21 +120,21 @@ namespace payroll_app.Models.repository
         [Display(Name = "Secondary Mobile No.")]
         [MaxLength(10, ErrorMessage = "Mobile number can not be more than 10 digits..!!")]
         [MinLength(10, ErrorMessage = "Mobile number can not be less than 10 digits..!!")]
-        [RegularExpression("\\d", ErrorMessage = "Can accept only digits..!!",
+        [RegularExpression(@"^[[\d]{10}]*", ErrorMessage = "Can accept only digits..!!",
             MatchTimeoutInMilliseconds = 1000)]
         public string SecondaryMobileNo { get; set; }
 
         [Column("AreaStdCode")]
         [Display(Name = "Area Std Code.")]
         [MaxLength(6, ErrorMessage = "Exceeded Character Limit..!!")]
-        [RegularExpression("\\d", ErrorMessage = "Can accept only digits..!!",
+        [RegularExpression(@"^[[\d]{6}]*", ErrorMessage = "Can accept only digits..!!",
             MatchTimeoutInMilliseconds = 1000)]
         public string AreaStdCode { get; set; }
 
         [Column("PhoneNo")]
         [Display(Name = "Phone No.")]
         [MaxLength(8, ErrorMessage = "Exceeded Character Limit..!!")]
-        [RegularExpression("\\d", ErrorMessage = "Can accept only digits..!!",
+        [RegularExpression(@"^[[\d]{8}]*", ErrorMessage = "Can accept only digits..!!",
             MatchTimeoutInMilliseconds = 1000)]
         public string PhoneNo { get; set; }
 
@@ -170,7 +174,7 @@ namespace payroll_app.Models.repository
         [Column("Pin")]
         [Display(Name = "Pin *")]
         [MaxLength(6, ErrorMessage = "Exceeded Character Limit..!!")]
-        [RegularExpression("\\d", ErrorMessage = "Can accept only digits..!!",
+        [RegularExpression(@"^[[\d]{6}]*", ErrorMessage = "Can accept only digits..!!",
             MatchTimeoutInMilliseconds = 1000)]
         [Required]
         public string Pin { get; set; }
@@ -178,7 +182,7 @@ namespace payroll_app.Models.repository
         [Column("PostOffice")]
         [Display(Name = "Post Office *")]
         [MaxLength(100, ErrorMessage = "Exceeded Character Limit..!!")]
-        [RegularExpression("\\w \\s", ErrorMessage = "Can accept only characters..!!",
+        [RegularExpression(@"^[[A-Za-z+[\s]+[A-Za-z]+]*]*", ErrorMessage = "Can accept only characters..!!",
             MatchTimeoutInMilliseconds = 1000)]
         [Required]
         public string PostOffice { get; set; }
@@ -186,11 +190,32 @@ namespace payroll_app.Models.repository
         [Column("PoliceStation")]
         [Display(Name = "Police Station *")]
         [MaxLength(100, ErrorMessage = "Exceeded Character Limit..!!")]
-        [RegularExpression("\\w \\s", ErrorMessage = "Can accept only digits..!!",
+        [RegularExpression(@"^[[A-Za-z+[\s]+[A-Za-z]+]*]*", ErrorMessage = "Can accept only digits..!!",
             MatchTimeoutInMilliseconds = 1000)]
         [Required]
         public string PoliceStation { get; set; }
+        
+        [ForeignKey("DepartmentId")]
+        [Required]
+        public int DepartmentId { get; set; }
 
-        public ICollection<AttendanceRegister> SalaryHeads { get; set; }
+        [ForeignKey("GradeId")]
+        [Required]
+        public int GradeId { get; set; }
+
+        [ForeignKey("WorkerTypeId")]
+        [Required]
+        public int WorkerTypeId { get; set; }
+
+        [ForeignKey("DepartmentId")]
+        public Department Department { get; set; }
+        
+        [ForeignKey("GradeId")]
+        public Grade Grade { get; set; }
+
+        [ForeignKey("WorkerTypeId")]
+        public WorkerType WorkerType { get; set; }
+
+        public ICollection<AttendanceRegister> AttendanceRegisters { get; set; }
     }
 }

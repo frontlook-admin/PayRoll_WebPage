@@ -12,18 +12,54 @@ namespace payroll_app.Migrations
                 name: "Department",
                 columns: table => new
                 {
-                    ID = table.Column<int>(nullable: false)
+                    DepartmentId = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     DepartmentName = table.Column<string>(maxLength: 30, nullable: false),
                     DepartmentCode = table.Column<string>(maxLength: 30, nullable: false),
-                    ArrangeOrder = table.Column<int>(maxLength: 11, nullable: false)
+                    ArrangeOrder = table.Column<string>(maxLength: 11, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Department", x => x.ID);
+                    table.PrimaryKey("PK_Department", x => x.DepartmentId);
                     table.UniqueConstraint("AK_Department_DepartmentCode", x => x.DepartmentCode);
                     table.UniqueConstraint("AK_Department_DepartmentName", x => x.DepartmentName);
-                    table.UniqueConstraint("AK_Department_DepartmentCode_DepartmentName_ID", x => new { x.DepartmentCode, x.DepartmentName, x.ID });
+                    table.UniqueConstraint("AK_Department_DepartmentCode_DepartmentId_DepartmentName", x => new { x.DepartmentCode, x.DepartmentId, x.DepartmentName });
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Grade",
+                columns: table => new
+                {
+                    GradeId = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    GradeName = table.Column<string>(maxLength: 30, nullable: false),
+                    GradeCode = table.Column<string>(maxLength: 30, nullable: false),
+                    ArrangeOrder = table.Column<string>(maxLength: 11, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Grade", x => x.GradeId);
+                    table.UniqueConstraint("AK_Grade_GradeCode", x => x.GradeCode);
+                    table.UniqueConstraint("AK_Grade_GradeName", x => x.GradeName);
+                    table.UniqueConstraint("AK_Grade_GradeCode_GradeId_GradeName", x => new { x.GradeCode, x.GradeId, x.GradeName });
+                });
+
+            migrationBuilder.CreateTable(
+                name: "WorkerType",
+                columns: table => new
+                {
+                    WorkerTypeId = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    WorkerTypeName = table.Column<string>(maxLength: 30, nullable: false),
+                    WorkerTypeCode = table.Column<string>(maxLength: 30, nullable: false),
+                    ArrangeOrder = table.Column<string>(maxLength: 11, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WorkerType", x => x.WorkerTypeId);
+                    table.UniqueConstraint("AK_WorkerType_WorkerTypeCode", x => x.WorkerTypeCode);
+                    table.UniqueConstraint("AK_WorkerType_WorkerTypeName", x => x.WorkerTypeName);
+                    table.UniqueConstraint("AK_WorkerType_WorkerTypeCode_WorkerTypeId_WorkerTypeName", x => new { x.WorkerTypeCode, x.WorkerTypeId, x.WorkerTypeName });
                 });
 
             migrationBuilder.CreateTable(
@@ -50,7 +86,10 @@ namespace payroll_app.Migrations
                     District = table.Column<string>(maxLength: 100, nullable: true),
                     Pin = table.Column<string>(maxLength: 6, nullable: false),
                     PostOffice = table.Column<string>(maxLength: 100, nullable: false),
-                    PoliceStation = table.Column<string>(maxLength: 100, nullable: false)
+                    PoliceStation = table.Column<string>(maxLength: 100, nullable: false),
+                    DepartmentId = table.Column<int>(nullable: false),
+                    GradeId = table.Column<int>(nullable: false),
+                    WorkerTypeId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -59,42 +98,24 @@ namespace payroll_app.Migrations
                     table.UniqueConstraint("AK_Employee_PrimaryMobileNo", x => x.PrimaryMobileNo);
                     table.UniqueConstraint("AK_Employee_SecondaryMobileNo", x => x.SecondaryMobileNo);
                     table.UniqueConstraint("AK_Employee_EmailId_Id_PrimaryMobileNo_SecondaryMobileNo", x => new { x.EmailId, x.Id, x.PrimaryMobileNo, x.SecondaryMobileNo });
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Grade",
-                columns: table => new
-                {
-                    ID = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    GradeName = table.Column<string>(maxLength: 30, nullable: false),
-                    GradeCode = table.Column<string>(maxLength: 30, nullable: false),
-                    ArrangeOrder = table.Column<string>(maxLength: 11, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Grade", x => x.ID);
-                    table.UniqueConstraint("AK_Grade_GradeCode", x => x.GradeCode);
-                    table.UniqueConstraint("AK_Grade_GradeName", x => x.GradeName);
-                    table.UniqueConstraint("AK_Grade_GradeCode_GradeName_ID", x => new { x.GradeCode, x.GradeName, x.ID });
-                });
-
-            migrationBuilder.CreateTable(
-                name: "WorkerType",
-                columns: table => new
-                {
-                    ID = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    CategoryName = table.Column<string>(maxLength: 30, nullable: false),
-                    CategoryCode = table.Column<string>(maxLength: 30, nullable: false),
-                    ArrangeOrder = table.Column<string>(maxLength: 11, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_WorkerType", x => x.ID);
-                    table.UniqueConstraint("AK_WorkerType_CategoryCode", x => x.CategoryCode);
-                    table.UniqueConstraint("AK_WorkerType_CategoryName", x => x.CategoryName);
-                    table.UniqueConstraint("AK_WorkerType_CategoryCode_CategoryName_ID", x => new { x.CategoryCode, x.CategoryName, x.ID });
+                    table.ForeignKey(
+                        name: "FK_Employee_Department_DepartmentId",
+                        column: x => x.DepartmentId,
+                        principalTable: "Department",
+                        principalColumn: "DepartmentId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Employee_Grade_GradeId",
+                        column: x => x.GradeId,
+                        principalTable: "Grade",
+                        principalColumn: "GradeId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Employee_WorkerType_WorkerTypeId",
+                        column: x => x.WorkerTypeId,
+                        principalTable: "WorkerType",
+                        principalColumn: "WorkerTypeId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -122,12 +143,30 @@ namespace payroll_app.Migrations
                 name: "IX_AttendanceRegister_EmployeeId",
                 table: "AttendanceRegister",
                 column: "EmployeeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Employee_DepartmentId",
+                table: "Employee",
+                column: "DepartmentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Employee_GradeId",
+                table: "Employee",
+                column: "GradeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Employee_WorkerTypeId",
+                table: "Employee",
+                column: "WorkerTypeId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
                 name: "AttendanceRegister");
+
+            migrationBuilder.DropTable(
+                name: "Employee");
 
             migrationBuilder.DropTable(
                 name: "Department");
@@ -137,9 +176,6 @@ namespace payroll_app.Migrations
 
             migrationBuilder.DropTable(
                 name: "WorkerType");
-
-            migrationBuilder.DropTable(
-                name: "Employee");
         }
     }
 }

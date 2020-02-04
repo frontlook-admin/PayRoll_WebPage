@@ -19,15 +19,15 @@ namespace payroll_app.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Department>().HasKey(s => s.Id);
+            modelBuilder.Entity<Department>().HasKey(s => s.DepartmentId);
             modelBuilder.Entity<Department>().HasAlternateKey(s => s.DepartmentName);
             modelBuilder.Entity<Department>().HasAlternateKey(s => s.DepartmentCode);
 
-            modelBuilder.Entity<WorkerType>().HasKey(s => s.Id);
-            modelBuilder.Entity<WorkerType>().HasAlternateKey(s => s.CategoryName);
-            modelBuilder.Entity<WorkerType>().HasAlternateKey(s => s.CategoryCode);
+            modelBuilder.Entity<WorkerType>().HasKey(s => s.WorkerTypeId);
+            modelBuilder.Entity<WorkerType>().HasAlternateKey(s => s.WorkerTypeName);
+            modelBuilder.Entity<WorkerType>().HasAlternateKey(s => s.WorkerTypeCode);
 
-            modelBuilder.Entity<Grade>().HasKey(s => s.Id);
+            modelBuilder.Entity<Grade>().HasKey(s => s.GradeId);
             modelBuilder.Entity<Grade>().HasAlternateKey(s => s.GradeName);
             modelBuilder.Entity<Grade>().HasAlternateKey(s => s.GradeCode);
 

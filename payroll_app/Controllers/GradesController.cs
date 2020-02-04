@@ -1,6 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using payroll_app.Data;
 using payroll_app.Models.repository;
@@ -31,7 +34,7 @@ namespace payroll_app.Controllers
             }
 
             var grade = await _context.Grade
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.GradeId == id);
             if (grade == null)
             {
                 return NotFound();
@@ -51,7 +54,7 @@ namespace payroll_app.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,GradeName,GradeCode,ArrangeOrder")] Grade grade)
+        public async Task<IActionResult> Create([Bind("GradeId,GradeName,GradeCode,ArrangeOrder")] Grade grade)
         {
             if (ModelState.IsValid)
             {
@@ -83,9 +86,9 @@ namespace payroll_app.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,GradeName,GradeCode,ArrangeOrder")] Grade grade)
+        public async Task<IActionResult> Edit(int id, [Bind("GradeId,GradeName,GradeCode,ArrangeOrder")] Grade grade)
         {
-            if (id != grade.Id)
+            if (id != grade.GradeId)
             {
                 return NotFound();
             }
@@ -99,7 +102,7 @@ namespace payroll_app.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!GradeExists(grade.Id))
+                    if (!GradeExists(grade.GradeId))
                     {
                         return NotFound();
                     }
@@ -122,7 +125,7 @@ namespace payroll_app.Controllers
             }
 
             var grade = await _context.Grade
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.GradeId == id);
             if (grade == null)
             {
                 return NotFound();
@@ -144,7 +147,7 @@ namespace payroll_app.Controllers
 
         private bool GradeExists(int id)
         {
-            return _context.Grade.Any(e => e.Id == id);
+            return _context.Grade.Any(e => e.GradeId == id);
         }
     }
 }

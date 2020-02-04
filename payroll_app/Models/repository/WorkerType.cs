@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace payroll_app.Models.repository
@@ -9,40 +10,45 @@ namespace payroll_app.Models.repository
     {
         //public IEnumerable<WorkerType> WorkerTypes;
 
-        public WorkerType(int id, string categoryName, string categoryCode, string arrangeOrder)
+        public WorkerType()
         {
-            Id = id;
-            CategoryName = categoryName;
-            CategoryCode = categoryCode;
+            
+        }
+        public WorkerType(int workerTypeId, string workerTypeName, string workerTypeCode, string arrangeOrder)
+        {
+            WorkerTypeId = workerTypeId;
+            WorkerTypeName = workerTypeName;
+            WorkerTypeCode = workerTypeCode;
             ArrangeOrder = arrangeOrder;
         }
 
         [Key]
-        [Column("ID")]
-        [Display(Name = "ID")]
-        public int Id { get; set; }
+        [Column("WorkerTypeId")]
+        [Display(Name = "Worker Type Id")]
+        public int WorkerTypeId { get; set; }
 
         [Key]
         [MaxLength(30, ErrorMessage = "Exceeded Character Limit..!!")]
-        [Column("CategoryName")]
-        [Display(Name = "Category Name")]
+        [Column("WorkerTypeName")]
+        [Display(Name = "Worker Type Name")]
         [Required]
-        public string CategoryName { get; set; }
+        public string WorkerTypeName { get; set; }
 
         [Key]
         [MaxLength(30, ErrorMessage = "Exceeded Character Limit..!!")]
-        [Column("CategoryCode")]
-        [Display(Name = "Category Code")]
+        [Column("WorkerTypeCode")]
+        [Display(Name = "Worker Type Code")]
         [Required]
-        public string CategoryCode { get; set; }
+        public string WorkerTypeCode { get; set; }
 
         [MaxLength(11, ErrorMessage = "Exceeded Character Limit..!!")]
-        [RegularExpression("\\d", ErrorMessage = "Can accept only digits..!!",
+        [RegularExpression("^[0-9]*", ErrorMessage = "Can accept only digits..!!",
             MatchTimeoutInMilliseconds = 1000)]
         [Column("ArrangeOrder")]
         [Display(Name = "Arrange Order")]
         //[Required]
         public string ArrangeOrder { get; set; }
 
+        public ICollection<Employee> Employees { get; set; }
     }
 }

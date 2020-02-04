@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace payroll_app.Models.repository
@@ -14,18 +15,18 @@ namespace payroll_app.Models.repository
 
         }
 
-        public Department(int id, string departmentName, string departmentCode, int arrangeOrder)
+        public Department(int departmentId, string departmentName, string departmentCode, string arrangeOrder)
         {
-            Id = id;
+            DepartmentId = departmentId;
             DepartmentName = departmentName;
             DepartmentCode = departmentCode;
             ArrangeOrder = arrangeOrder;
         }
 
         [Key]
-        [Column("ID")]
-        [Display(Name = "ID")]
-        public int Id { get; set; }
+        [Column("DepartmentId")]
+        [Display(Name = "Department Id")]
+        public int DepartmentId { get; set; }
 
         [Key]
         [MaxLength(30)]
@@ -44,9 +45,11 @@ namespace payroll_app.Models.repository
         [MaxLength(11)]
         [Column("ArrangeOrder")]
         [Display(Name = "Arrange Order")]
-        [RegularExpression("\\d", ErrorMessage = "Can accept only digits..!!",
+        [RegularExpression("^[0-9]*", ErrorMessage = "Can accept only digits..!!",
             MatchTimeoutInMilliseconds = 1000)]
         //[Required]
-        public int ArrangeOrder { get; set; }
+        public string ArrangeOrder { get; set; }
+
+        public ICollection<Employee> Employees { get; set; }
     }
 }

@@ -11,6 +11,11 @@ namespace payroll_app.Models.repository
     [Display(Name = "Attendance Register",Description = "Registers Employee Attendance")]
     public class AttendanceRegister
     {
+        public AttendanceRegister()
+        {
+            
+        }
+
         [Key]
         public int Id { get; set; }
         
