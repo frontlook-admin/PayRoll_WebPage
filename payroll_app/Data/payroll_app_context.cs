@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using payroll_app.Models.repository;
 
 namespace payroll_app.Data
@@ -33,8 +34,6 @@ namespace payroll_app.Data
 
             modelBuilder.Entity<Employee>().HasKey(s => s.Id);
             modelBuilder.Entity<Employee>().HasAlternateKey(s => s.PrimaryMobileNo);
-            modelBuilder.Entity<Employee>().HasAlternateKey(s => s.SecondaryMobileNo);
-            modelBuilder.Entity<Employee>().HasAlternateKey(s => s.EmailId);
 
             modelBuilder.Entity<AttendanceRegister>().HasKey(s => s.Id);
         }
@@ -44,5 +43,7 @@ namespace payroll_app.Data
         public DbSet<Grade> Grade { get; set; }
         public DbSet<Employee> Employee { get; set; }
         public DbSet<AttendanceRegister> AttendanceRegister { get; set; }
+
+        
     }
 }

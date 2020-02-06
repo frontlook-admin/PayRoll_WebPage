@@ -26,10 +26,10 @@ namespace payroll_app.Models.repository
 
         [Column("AttendanceTime")]
         [Display(Name = "Attendance Time",AutoGenerateField = true)]
-        [DisplayFormat(DataFormatString = "{0:dd} {0:MMMM},{0:yyyy} {dddd}, {0:h:mm:ss} {0:tt}")]
-        [Editable(allowEdit:false)]
+        [DisplayFormat(DataFormatString = "{0:dddd, dd/MM/yyyy, h:mm:ss tt}")]
+        [Editable(allowEdit:true)]
         [Timestamp]
-        public byte[] AttendanceTime { get; set; }
+        public DateTime AttendanceTime { get; set; }
 
         [ForeignKey("EmployeeId")]
         public Employee Employees { get; set; }

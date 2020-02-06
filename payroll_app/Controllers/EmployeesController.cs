@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
+using _varimg=payroll_app.codeHelper.RandomImage;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -15,16 +18,34 @@ namespace payroll_app.Controllers
     public class EmployeesController : Controller
     {
         private readonly payroll_app_context _context;
+        private readonly IHostingEnvironment _hosting_environment;
 
-        public EmployeesController(payroll_app_context context)
+        public EmployeesController(payroll_app_context context, IHostingEnvironment hostingEnvironment)
         {
             _context = context;
+            _hosting_environment = hostingEnvironment;
         }
 
         // GET: Employees
         public async Task<IActionResult> Index()
         {
             var payroll_app_context = _context.Employee.Include(e => e.Department).Include(e => e.Grade).Include(e => e.WorkerType);
+            /*if (_context.Employee.Include(e => e.EmployeePhoto).Equals(null))
+            {
+                _context.Employee.Include(e => e.EmployeePhoto).
+            }*/
+            byte[] b = System.IO.File.ReadAllBytes(_varimg.userimgchooser(_hosting_environment.WebRootPath));
+            foreach (var employee in payroll_app_context)
+            {
+                try
+                {
+                    var base64String = Convert.ToBase64String(employee.EmployeePhoto);
+                }
+                catch (Exception)
+                {
+                    employee.EmployeePhoto = System.IO.File.ReadAllBytes(_varimg.userimgchooser(_hosting_environment.WebRootPath,employee.Gender)); ;
+                }
+            }
             return View(await payroll_app_context.ToListAsync());
         }
 
@@ -45,13 +66,23 @@ namespace payroll_app.Controllers
             {
                 return NotFound();
             }
-
+            byte[] b = System.IO.File.ReadAllBytes(_varimg.userimgchooser(_hosting_environment.WebRootPath,employee.Gender));
+            try
+            {
+                var base64String = Convert.ToBase64String(employee.EmployeePhoto);
+            }
+            catch (Exception)
+            {
+                employee.EmployeePhoto = b;
+            }
             return View(employee);
         }
 
         // GET: Employees/Create
         public IActionResult Create()
         {
+            byte[] b = System.IO.File.ReadAllBytes(_varimg.userimgchooser(_hosting_environment.WebRootPath));
+            ViewBag.photo = Convert.ToBase64String(b);
             ViewData["DepartmentId"] = new SelectList(_context.Department, "DepartmentId", "DepartmentCode");
             ViewData["GradeId"] = new SelectList(_context.Grade, "GradeId", "GradeCode");
             ViewData["WorkerTypeId"] = new SelectList(_context.WorkerType, "WorkerTypeId", "WorkerTypeCode");
@@ -65,20 +96,29 @@ namespace payroll_app.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,EmployeePhoto,FirstName,MiddleName,LastName,FullName,Gender,PrimaryMobileNo,SecondaryMobileNo,AreaStdCode,PhoneNo,EmailId,Address1,Address2,Address3,City,District,Pin,PostOffice,PoliceStation,DepartmentId,GradeId,WorkerTypeId")] Employee employee, IFormFile EmployeePhoto)
         {
-            if (ModelState.IsValid)
+            var b = System.IO.File.ReadAllBytes(_varimg.randuserimgchooser(_hosting_environment.WebRootPath));
+            byte[] c = null;
+            if (EmployeePhoto != null)
             {
-                if (EmployeePhoto != null)
+                if (EmployeePhoto.Length > 0)
+                    //Convert Image to byte and save to database
                 {
-                    if (EmployeePhoto.Length > 0)
-                        //Convert Image to byte and save to database
+                    using (var ms1 = new MemoryStream())
                     {
-                        using (var ms1 = new MemoryStream())
-                        {
-                            await EmployeePhoto.CopyToAsync(ms1);
-                            employee.EmployeePhoto = ms1.ToArray();
-                        }
+                        await EmployeePhoto.CopyToAsync(ms1);
+                        c = ms1.ToArray();
+                        ViewBag.photo = Convert.ToBase64String(c);
                     }
                 }
+            }
+
+            if (ModelState.IsValid)
+            {
+                if (!c.Equals(null))
+                {
+                    employee.EmployeePhoto = c;
+                }
+                
                 _context.Add(employee);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -102,6 +142,20 @@ namespace payroll_app.Controllers
             {
                 return NotFound();
             }
+
+            var b = System.IO.File.ReadAllBytes(_varimg.userimgchooser(_hosting_environment.WebRootPath,employee.Gender));
+            byte[] im = null;
+            try
+            {
+                var base64String = Convert.ToBase64String(employee.EmployeePhoto);
+                im = employee.EmployeePhoto;
+            }
+            catch (Exception)
+            {
+                im = b;
+            }
+
+            ViewBag.photo = im;
             ViewData["DepartmentId"] = new SelectList(_context.Department, "DepartmentId", "DepartmentCode", employee.DepartmentId);
             ViewData["GradeId"] = new SelectList(_context.Grade, "GradeId", "GradeCode", employee.GradeId);
             ViewData["WorkerTypeId"] = new SelectList(_context.WorkerType, "WorkerTypeId", "WorkerTypeCode", employee.WorkerTypeId);
@@ -113,8 +167,23 @@ namespace payroll_app.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,EmployeePhoto,FirstName,MiddleName,LastName,FullName,Gender,PrimaryMobileNo,SecondaryMobileNo,AreaStdCode,PhoneNo,EmailId,Address1,Address2,Address3,City,District,Pin,PostOffice,PoliceStation,DepartmentId,GradeId,WorkerTypeId")] Employee employee)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,EmployeePhoto,FirstName,MiddleName,LastName,FullName,Gender,PrimaryMobileNo,SecondaryMobileNo,AreaStdCode,PhoneNo,EmailId,Address1,Address2,Address3,City,District,Pin,PostOffice,PoliceStation,DepartmentId,GradeId,WorkerTypeId")] Employee employee,IFormFile EmployeePhoto)
         {
+            byte[] img = null;
+            if (EmployeePhoto != null)
+            {
+                if (EmployeePhoto.Length > 0)
+                    //Convert Image to byte and save to database
+                {
+                    using (var ms1 = new MemoryStream())
+                    {
+                        await EmployeePhoto.CopyToAsync(ms1);
+                        img = ms1.ToArray();
+                        var b = System.IO.File.ReadAllBytes(_varimg.userimgchooser(_hosting_environment.WebRootPath,employee.Gender));
+                        ViewBag.photo = b;
+                    }
+                }
+            }
             if (id != employee.Id)
             {
                 return NotFound();
@@ -124,6 +193,7 @@ namespace payroll_app.Controllers
             {
                 try
                 {
+                    employee.EmployeePhoto = img;
                     _context.Update(employee);
                     await _context.SaveChangesAsync();
                 }
@@ -163,7 +233,15 @@ namespace payroll_app.Controllers
             {
                 return NotFound();
             }
-
+            byte[] b = System.IO.File.ReadAllBytes(_varimg.userimgchooser(_hosting_environment.WebRootPath,employee.Gender));
+            try
+            {
+                var base64String = Convert.ToBase64String(employee.EmployeePhoto);
+            }
+            catch (Exception)
+            {
+                employee.EmployeePhoto = b;
+            }
             return View(employee);
         }
 

@@ -48,7 +48,8 @@ namespace payroll_app.Controllers
         // GET: AttendanceRegisters/Create
         public IActionResult Create()
         {
-            ViewData["EmployeeId"] = new SelectList(_context.Employee, "Id", "Address1");
+            
+            ViewData["EmployeeId"] = new SelectList(_context.Employee, "Id", "FirstName");
             return View();
         }
 
@@ -65,7 +66,7 @@ namespace payroll_app.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["EmployeeId"] = new SelectList(_context.Employee, "Id", "Address1", attendanceRegister.EmployeeId);
+            ViewData["EmployeeId"] = new SelectList(_context.Employee, "Id", "FirstName", attendanceRegister.EmployeeId);
             return View(attendanceRegister);
         }
 
@@ -82,7 +83,7 @@ namespace payroll_app.Controllers
             {
                 return NotFound();
             }
-            ViewData["EmployeeId"] = new SelectList(_context.Employee, "Id", "Address1", attendanceRegister.EmployeeId);
+            ViewData["EmployeeId"] = new SelectList(_context.Employee, "Id", "FirstName", attendanceRegister.EmployeeId);
             return View(attendanceRegister);
         }
 
@@ -118,7 +119,7 @@ namespace payroll_app.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["EmployeeId"] = new SelectList(_context.Employee, "Id", "Address1", attendanceRegister.EmployeeId);
+            ViewData["EmployeeId"] = new SelectList(_context.Employee, "Id", "FirstName", attendanceRegister.EmployeeId);
             return View(attendanceRegister);
         }
 

@@ -33,10 +33,4 @@
     </Reference>
   </ItemGroup>
 
-
-  <ItemGroup>
-    <Folder Include="images\EmployeePhotos\" />
-    <Folder Include="images\stock\" />
-  </ItemGroup>
-
 </Project>

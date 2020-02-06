@@ -24,7 +24,7 @@ namespace payroll_app.Migrations
 
                     b.Property<bool>("Attendance");
 
-                    b.Property<DateTime?>("AttendanceTime")
+                    b.Property<DateTime>("AttendanceTime")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnName("AttendanceTime");
@@ -104,7 +104,6 @@ namespace payroll_app.Migrations
                         .HasMaxLength(100);
 
                     b.Property<string>("EmailId")
-                        .IsRequired()
                         .HasColumnName("EmailId")
                         .HasMaxLength(400);
 
@@ -159,7 +158,6 @@ namespace payroll_app.Migrations
                         .HasMaxLength(10);
 
                     b.Property<string>("SecondaryMobileNo")
-                        .IsRequired()
                         .HasColumnName("SecondaryMobileNo")
                         .HasMaxLength(10);
 
@@ -167,11 +165,7 @@ namespace payroll_app.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("EmailId");
-
                     b.HasAlternateKey("PrimaryMobileNo");
-
-                    b.HasAlternateKey("SecondaryMobileNo");
 
                     b.HasAlternateKey("Id", "PrimaryMobileNo");
 
