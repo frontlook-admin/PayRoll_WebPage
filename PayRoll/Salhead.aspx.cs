@@ -6,7 +6,7 @@ using System.Linq;
 using System.Web.UI.WebControls;
 using _response = frontlook_dotnetframework_library.FL_webpage.FL_general.FL_response;
 using _color = frontlook_dotnetframework_library.FL_webpage.FL_general.FL_Color;
-using _sql = frontlook_dotnetframework_library.FL_webpage.FL_DataBase.FL_MySql.FL_MySqlExecutor;
+using frontlook_dotnetframework_library.FL_webpage.FL_DataBase;
 using frontlook_dotnetframework_library.FL_webpage.FL_general;
 using MySql.Data.MySqlClient;
 using repository;
@@ -98,7 +98,7 @@ namespace PayRoll
                 };
                 dl.Items.Add(item1);
                 cmd.CommandText = "SELECT salhead_id,salhead_code,salhead_name FROM salary_head;";
-                _sql.Con_switch(con);
+                con.Con_switch();
                 MySqlDataReader reader = cmd.ExecuteReader();
 
                 while (reader.Read())
@@ -111,7 +111,7 @@ namespace PayRoll
                     dl.Items.Add(item);
                 }
                 reader.Close();
-                _sql.Con_switch(con);
+                con.Con_switch();
             }
             catch (Exception e)
             {
@@ -127,7 +127,7 @@ namespace PayRoll
                 {
                     cmd.CommandText = "SELECT group_id,group_name FROM head_group;";
                     dl.Items.Clear();
-                    _sql.Con_switch(con);
+                    con.Con_switch();
                     MySqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
@@ -139,7 +139,7 @@ namespace PayRoll
                         dl.Items.Add(item);
                     }
                     reader.Close();
-                    _sql.Con_switch(con);
+                    con.Con_switch();
                 }
             }
             catch (Exception e)
@@ -171,10 +171,10 @@ namespace PayRoll
                               "('" + ins._code + "','" + ins._name + "','" + ins._groupcode + "','" + ins._formula + "'," + ins._add_to_salinfo + ",'"
                               + ins._startdate.ToString("yyyy-MM-dd") + "');";
 
-            _sql.Con_switch(con);
+            con.Con_switch();
             int r = cmd.ExecuteNonQuery();
             cmd.CommandText = "";
-            _sql.Con_switch(con);
+            con.Con_switch();
 
             if (r == 1)
             {
@@ -183,13 +183,13 @@ namespace PayRoll
                     try
                     {
                         cmd.CommandText = "ALTER TABLE salary_info ADD COLUMN `" + ins._name + "` DECIMAL(20,2);";
-                        _sql.Con_switch(con);
+                        con.Con_switch();
                         var q = cmd.ExecuteNonQuery();
-                        _sql.Con_switch(con);
+                        con.Con_switch();
                         cmd.CommandText = "ALTER TABLE salary_generate ADD COLUMN `" + ins._name + "` DECIMAL(20,2);";
-                        _sql.Con_switch(con);
+                        con.Con_switch();
                         var t = cmd.ExecuteNonQuery();
-                        _sql.Con_switch(con);
+                        con.Con_switch();
                         if (q == t && q == 1)
                         {
                             Response.Write(_response.FL_message("Salary Head " + ins._name.ToUpper() + " Successfully Created...!!!",
@@ -235,9 +235,9 @@ namespace PayRoll
                               set._groupcode + "','" + set._formula + "',"+set._add_to_salinfo+",'" + set._startdate.ToString("yyyy-MM-dd") + "');";*/
             cmd.CommandText = cmdtxt;
 
-            _sql.Con_switch(con);
+            con.Con_switch();
             var r = cmd.ExecuteNonQuery();
-            _sql.Con_switch(con);
+            con.Con_switch();
             cmd.CommandText = "";
 
             if (r == 1)
@@ -250,14 +250,14 @@ namespace PayRoll
                         var t = 0;
 
                         cmd.CommandText = "ALTER TABLE salary_info CHANGE COLUMN `" + edit_oldname.Text + "` `" + set._name + "` DECIMAL(20,2);";
-                        _sql.Con_switch(con);
+                        con.Con_switch();
                         q = cmd.ExecuteNonQuery();
-                        _sql.Con_switch(con);
+                        con.Con_switch();
 
                         cmd.CommandText = "ALTER TABLE salary_generate CHANGE COLUMN `" + edit_oldname.Text + "` `" + set._name + "` DECIMAL(20,2);";
-                        _sql.Con_switch(con);
+                        con.Con_switch();
                         t = cmd.ExecuteNonQuery();
-                        _sql.Con_switch(con);
+                        con.Con_switch();
 
                         if (q == t && q == 1)
                         {
@@ -276,31 +276,31 @@ namespace PayRoll
                             if (_repo.Column_Exists("salary_info", edit_oldname.Text))
                             {
                                 cmd.CommandText = "ALTER TABLE salary_info CHANGE COLUMN `" + edit_oldname.Text + "` `" + set._name + "` DECIMAL(20,2);";
-                                _sql.Con_switch(con);
+                                con.Con_switch();
                                 q = cmd.ExecuteNonQuery();
-                                _sql.Con_switch(con);
+                                con.Con_switch();
                             }
                             else
                             {
                                 cmd.CommandText = "ALTER TABLE salary_info ADD COLUMN `" + set._name + "` DECIMAL(20,2);";
-                                _sql.Con_switch(con);
+                                con.Con_switch();
                                 q = cmd.ExecuteNonQuery();
-                                _sql.Con_switch(con);
+                                con.Con_switch();
                             }
 
                             if (_repo.Column_Exists("salary_generate", edit_oldname.Text))
                             {
                                 cmd.CommandText = "ALTER TABLE salary_generate CHANGE COLUMN `" + edit_oldname.Text + "` `" + set._name + "` DECIMAL(20,2);";
-                                _sql.Con_switch(con);
+                                con.Con_switch();
                                 t = cmd.ExecuteNonQuery();
-                                _sql.Con_switch(con);
+                                con.Con_switch();
                             }
                             else
                             {
                                 cmd.CommandText = "ALTER TABLE salary_generate ADD COLUMN `" + set._name + "` DECIMAL(20,2);";
-                                _sql.Con_switch(con);
+                                con.Con_switch();
                                 t = cmd.ExecuteNonQuery();
-                                _sql.Con_switch(con);
+                                con.Con_switch();
                             }
 
                             if (q == t && t == 1)
@@ -324,13 +324,13 @@ namespace PayRoll
                     /*if (_repo.Column_Exists("salary_info", edit_oldname.Text))
                     {
                         cmd.CommandText = "ALTER TABLE salary_info drop COLUMN `" + edit_oldname.Text + "`;";
-                        _sql.Con_switch(con);
+                        con.Con_switch();
                         var q = cmd.ExecuteNonQuery();
-                        _sql.Con_switch(con);
+                        con.Con_switch();
                         cmd.CommandText = "ALTER TABLE salary_generate drop COLUMN `" + edit_oldname.Text + "`;";
-                        _sql.Con_switch(con);
+                        con.Con_switch();
                         var t = cmd.ExecuteNonQuery();
-                        _sql.Con_switch(con);
+                        con.Con_switch();
                         if (q == t && t == 1)
                         {
                             Response.Write(_response.FL_message("Salary Head Column " + edit_oldname.Text.ToUpper() +
@@ -343,17 +343,17 @@ namespace PayRoll
                     if (_repo.Column_Exists("salary_info", edit_oldname.Text))
                     {
                         cmd.CommandText = "ALTER TABLE salary_info drop COLUMN `" + edit_oldname.Text + "`;";
-                        _sql.Con_switch(con);
+                        con.Con_switch();
                         q = cmd.ExecuteNonQuery();
-                        _sql.Con_switch(con);
+                        con.Con_switch();
                     }
 
                     if (_repo.Column_Exists("salary_generate", edit_oldname.Text))
                     {
                         cmd.CommandText = "ALTER TABLE salary_generate drop COLUMN `" + edit_oldname.Text + "`;";
-                        _sql.Con_switch(con);
+                        con.Con_switch();
                         t = cmd.ExecuteNonQuery();
-                        _sql.Con_switch(con);
+                        con.Con_switch();
 
                     }
                     if (q == t && t == 1)
@@ -380,9 +380,9 @@ namespace PayRoll
             try
             {
                 cmd.CommandText = "CALL salary_head_delete(" + int.Parse(salheadid.SelectedValue) + ");";
-                _sql.Con_switch(con);
+                con.Con_switch();
                 var r = cmd.ExecuteNonQuery();
-                _sql.Con_switch(con);
+                con.Con_switch();
                 if (r == 1)
                 {
                     var q = 0;
@@ -390,17 +390,17 @@ namespace PayRoll
                     if (_repo.Column_Exists("salary_info", edit_oldname.Text))
                     {
                         cmd.CommandText = "ALTER TABLE salary_info drop COLUMN `" + edit_oldname.Text + "`;";
-                        _sql.Con_switch(con);
+                        con.Con_switch();
                         q = cmd.ExecuteNonQuery();
-                        _sql.Con_switch(con);
+                        con.Con_switch();
                     }
 
                     if (_repo.Column_Exists("salary_generate", edit_oldname.Text))
                     {
                         cmd.CommandText = "ALTER TABLE salary_generate drop COLUMN `" + edit_oldname.Text + "`;";
-                        _sql.Con_switch(con);
+                        con.Con_switch();
                         t = cmd.ExecuteNonQuery();
-                        _sql.Con_switch(con);
+                        con.Con_switch();
 
                     }
                     if (q == t && t == 1)
@@ -469,7 +469,7 @@ namespace PayRoll
         {
             var gdata = new Salhead_repo { _id = int.Parse(salheadid.SelectedValue) };
             cmd.CommandText = "SELECT salhead_code,salhead_name,salhead_group_id,salhead_formula,salhead_add_to_salinfo,salhead_start_date FROM salary_head WHERE salhead_id = " + gdata._id + ";";
-            _sql.Con_switch(con);
+            con.Con_switch();
             MySqlDataReader reader = cmd.ExecuteReader();
             while (reader.Read())
             {
@@ -488,7 +488,7 @@ namespace PayRoll
                 }
                 gdata._startdate = DateTime.Parse(reader["salhead_start_date"].ToString());
             }
-            _sql.Con_switch(con);
+            con.Con_switch();
             gdata._oldname = gdata._name;
             return gdata;
         }
@@ -602,7 +602,7 @@ namespace PayRoll
                         Value = "(IF ((CONDITION),(TRUE),(FALSE)))"
                     };
                     lb.Items.Add(item0);
-                    _sql.Con_switch(con);
+                    con.Con_switch();
                     MySqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
@@ -614,7 +614,7 @@ namespace PayRoll
                         lb.Items.Add(item);
                     }
                     reader.Close();
-                    _sql.Con_switch(con);
+                    con.Con_switch();
                 }
             }
             catch (Exception e)

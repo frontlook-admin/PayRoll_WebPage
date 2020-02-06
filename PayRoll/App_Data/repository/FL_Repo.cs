@@ -1,4 +1,5 @@
 ﻿using System.Configuration;
+using frontlook_dotnetframework_library.FL_webpage.FL_DataBase.FL_MySql;
 using MySql.Data.MySqlClient;
 using _sql = frontlook_dotnetframework_library.FL_webpage.FL_DataBase.FL_MySql.FL_MySqlExecutor;
 
@@ -14,7 +15,7 @@ namespace repository
         private static readonly MySqlCommand cmd = new MySqlCommand();
         public static bool Column_Exists(string TableName, string ColumnName)
         {
-            return _sql.FL_Check_Column_Exists(con, cmd, "payroll_db", TableName, ColumnName);
+            return cmd.FL_MySql_Check_Column_Exists(con, "payroll_db", TableName, ColumnName);
         }
     }
 }

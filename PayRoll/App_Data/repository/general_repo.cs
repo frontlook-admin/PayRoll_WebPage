@@ -1,5 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
-using _sql = frontlook_dotnetframework_library.FL_webpage.FL_DataBase.FL_MySql.FL_MySqlExecutor;
+using _sql = frontlook_dotnetframework_library.FL_webpage.FL_DataBase.FL_SqlExecutor;
 
 namespace repository
 {
@@ -11,7 +11,7 @@ namespace repository
             cmd.CommandText = "SELECT COUNT(salhead_name) as c FROM salary_head WHERE salhead_add_to_salinfo = 1;";
             cmd.Connection = con;
             _sql.Con_switch(con);
-            MySqlDataReader reader = cmd.ExecuteReader();
+            var reader = cmd.ExecuteReader();
             while (reader.Read())
             {
                 count = int.Parse(reader["c"].ToString());

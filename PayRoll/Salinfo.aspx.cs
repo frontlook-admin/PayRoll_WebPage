@@ -6,7 +6,7 @@ using frontlook_dotnetframework_library.FL_webpage.FL_Controls;
 using MySql.Data.MySqlClient;
 using _response = frontlook_dotnetframework_library.FL_webpage.FL_general.FL_response;
 using _controls = frontlook_dotnetframework_library.FL_webpage.FL_Controls.FL_GetControl;
-using _sql = frontlook_dotnetframework_library.FL_webpage.FL_DataBase.FL_MySql.FL_MySqlExecutor;
+using frontlook_dotnetframework_library.FL_webpage.FL_DataBase;
 using repository;
 
 namespace PayRoll
@@ -40,7 +40,7 @@ namespace PayRoll
                 cmd.Connection = con;
                 //cmd.CommandText = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='payroll_db' AND TABLE_NAME='salary_info' AND COLUMN_NAME NOT IN (SELECT 'id');";
                 cmd.CommandText = "SELECT salhead_name FROM salary_head WHERE salhead_add_to_salinfo = 1;";
-                _sql.Con_switch(con);
+                con.Con_switch();
                 MySqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
@@ -48,7 +48,7 @@ namespace PayRoll
                     add_sec_salinfo.Controls.Add(FL_Label_TextBox.FL_label_textbox_default(a));
                 }
                 reader.Close();
-                _sql.Con_switch(con);
+                con.Con_switch();
             }
             catch (MySqlException)
             {
@@ -74,7 +74,7 @@ namespace PayRoll
                 };
                 dl.Items.Add(item1);
 
-                _sql.Con_switch(con);
+                con.Con_switch();
                 var reader = cmd.ExecuteReader();
 
                 while (reader.Read())
@@ -87,7 +87,7 @@ namespace PayRoll
                     dl.Items.Add(item);
                 }
                 reader.Close();
-                _sql.Con_switch(con);
+                con.Con_switch();
             }
             catch (Exception e)
             {
@@ -149,7 +149,7 @@ namespace PayRoll
             {
                 //Response.Write(r + "");
                 cmd.CommandText = "SELECT " + q + " FROM salary_info WHERE id = " + id + ";";
-                _sql.Con_switch(con);
+                con.Con_switch();
                 MySqlDataReader reader1 = cmd.ExecuteReader();
 
                 while (reader1.Read())
@@ -173,7 +173,7 @@ namespace PayRoll
                     }
                 }
                 reader1.Close();
-                _sql.Con_switch(con);
+                con.Con_switch();
             }
         }
 
@@ -224,9 +224,9 @@ namespace PayRoll
                 string queary = Queary_build_updatedata(count, controlids, ids);
                 //Response.Write(queary);
                 cmd.CommandText = queary;
-                _sql.Con_switch(con);
+                con.Con_switch();
                 int r = cmd.ExecuteNonQuery();
-                _sql.Con_switch(con);
+                con.Con_switch();
                 if (r == 1)
                 {
                     Response.Write(_response.FL_message("Data Updated Successfully..!!"));
@@ -270,7 +270,7 @@ namespace PayRoll
             int count = 0;
             cmd.CommandText = "SELECT COUNT(salhead_name) as c FROM salary_head;";
             cmd.Connection = con;
-            _sql.Con_switch(con);
+            con.Con_switch();
             reader = cmd.ExecuteReader();
             while (reader.Read())
             {
@@ -278,12 +278,12 @@ namespace PayRoll
                 //Response.Write(_response.FL_message(count.ToString()));
             }
             reader.Close();
-            _sql.Con_switch(con);
+            con.Con_switch();
 
             cmd.CommandText = "SELECT salhead_name FROM salary_head;";
             int i = 0;
             cmd.Connection = con;
-            _sql.Con_switch(con);
+            con.Con_switch();
             reader = cmd.ExecuteReader();
             while (reader.Read())
             {
@@ -316,7 +316,7 @@ namespace PayRoll
                 i++;
             }
             reader.Close();
-            _sql.Con_switch(con);
+            con.Con_switch();
             Response.Write(q.ToString());
             return q;
         }*/

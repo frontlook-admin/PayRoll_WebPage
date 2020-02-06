@@ -7,7 +7,7 @@ using System.Web.UI.WebControls;
 using frontlook_dotnetframework_library.FL_universal;
 using _response = frontlook_dotnetframework_library.FL_webpage.FL_general.FL_response;
 using _controls = frontlook_dotnetframework_library.FL_webpage.FL_Controls.FL_GetControl;
-using _sql = frontlook_dotnetframework_library.FL_webpage.FL_DataBase.FL_MySql.FL_MySqlExecutor;
+using frontlook_dotnetframework_library.FL_webpage.FL_DataBase;
 using MySql.Data.MySqlClient;
 using repository;
 using _prr = repository.payroll_repo;
@@ -49,7 +49,7 @@ namespace PayRoll
 
         private bool check_formula(string columnName, string tableName)
         {
-            return _sql.FL_Check_Column_Exists(con, cmd, _prr.database_name, tableName, columnName);
+            return cmd.FL_Check_Column_Exists(con, _prr.database_name, tableName, columnName);
         }
 
         private bool check_formula_all(string formula)
@@ -74,7 +74,7 @@ namespace PayRoll
             cmd.CommandText =
                 "SELECT salhead_formula, salhead_group_id, group_name, group_code FROM salary_head LEFT JOIN head_group ho on salary_head.salhead_group_id = ho.group_id WHERE salhead_name='" +
                 x + "';";
-            _sql.Con_switch(con);
+            con.Con_switch();
             var reader = cmd.ExecuteReader();
             while (reader.Read())
             {
@@ -82,7 +82,7 @@ namespace PayRoll
             }
             reader.Close();
             reader.Dispose();
-            _sql.Con_switch(con);
+            con.Con_switch();
             Response.Write(_response.FL_printmessage_to_webpage(c));
             return c;
         }
@@ -151,7 +151,7 @@ namespace PayRoll
                     cmd.CommandText =
                         "SELECT salhead_formula, salhead_group_id, group_name, group_code FROM salary_head LEFT JOIN head_group ho on salary_head.salhead_group_id = ho.group_id WHERE salhead_name = '" + ids[i] +
                         "';";
-                    _sql.Con_switch(con);
+                    con.Con_switch();
                     var reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
@@ -161,7 +161,7 @@ namespace PayRoll
 
                     reader.Close();
                     reader.Dispose();
-                    _sql.Con_switch(con);
+                    con.Con_switch();
                 }
 
                 formula = rectified_formula(formula);
@@ -171,7 +171,7 @@ namespace PayRoll
                     Response.Write(_response.FL_printmessage_to_webpage(formula[i]));
                     cmd.CommandText = "SELECT " + formula[i] + " AS `" + ids[i] + "` FROM salary_info WHERE id=" +
                                       int.Parse(id) + ";";
-                    _sql.Con_switch(con);
+                    con.Con_switch();
                     var reader1 = cmd.ExecuteReader();
                     while (reader1.Read())
                     {
@@ -186,7 +186,7 @@ namespace PayRoll
 
                     reader1.Close();
                     reader1.Dispose();
-                    _sql.Con_switch(con);
+                    con.Con_switch();
 
                     if (!string.IsNullOrEmpty(amts[i].ToString()) && !string.Equals(amts[i].ToString(), "0"))
                     {
@@ -256,7 +256,7 @@ namespace PayRoll
                 };
                 dl.Items.Add(item1);
 
-                _sql.Con_switch(con);
+                con.Con_switch();
                 MySqlDataReader reader = cmd.ExecuteReader();
 
                 while (reader.Read())
@@ -269,7 +269,7 @@ namespace PayRoll
                     dl.Items.Add(item);
                 }
                 reader.Close();
-                _sql.Con_switch(con);
+                con.Con_switch();
             }
             catch (Exception e)
             {
@@ -324,7 +324,7 @@ namespace PayRoll
             {
                 //Dynamiccontrols();
                 cmd.CommandText = "SELECT " + q + " FROM salary_info WHERE id = " + id + ";";
-                _sql.Con_switch(con);
+                con.Con_switch();
                 MySqlDataReader reader1 = cmd.ExecuteReader();
 
                 while (reader1.Read())
@@ -342,7 +342,7 @@ namespace PayRoll
                     }
                 }
                 reader1.Close();
-                _sql.Con_switch(con);
+                con.Con_switch();
             }
             /*else
             {
@@ -360,7 +360,7 @@ namespace PayRoll
                 cmd.Connection = con;
                 //cmd.CommandText = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='payroll_db' AND TABLE_NAME='salary_info' AND COLUMN_NAME NOT IN (SELECT 'id');";
                 cmd.CommandText = "SELECT salhead_name FROM salary_head;";
-                _sql.Con_switch(con);
+                con.Con_switch();
                 MySqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
@@ -368,7 +368,7 @@ namespace PayRoll
                     salgen.Controls.Add(FL_Label_TextBox.FL_label_readonly_textbox_default(a));
                 }
                 reader.Close();
-                _sql.Con_switch(con);
+                con.Con_switch();
             }
             catch (MySqlException)
             {

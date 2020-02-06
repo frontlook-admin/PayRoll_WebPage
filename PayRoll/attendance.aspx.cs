@@ -5,7 +5,7 @@ using System.Web.UI.WebControls;
 using frontlook_dotnetframework_library.FL_universal;
 using _response = frontlook_dotnetframework_library.FL_webpage.FL_general.FL_response;
 using _controls = frontlook_dotnetframework_library.FL_webpage.FL_Controls.FL_GetControl;
-using _sql = frontlook_dotnetframework_library.FL_webpage.FL_DataBase.FL_MySql.FL_MySqlExecutor;
+using _sql = frontlook_dotnetframework_library.FL_webpage.FL_DataBase.FL_SqlExecutor;
 using MySql.Data.MySqlClient;
 using frontlook_dotnetframework_library.FL_webpage.FL_Controls;
 
