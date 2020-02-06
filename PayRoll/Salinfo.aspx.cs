@@ -7,6 +7,7 @@ using MySql.Data.MySqlClient;
 using _response = frontlook_dotnetframework_library.FL_webpage.FL_general.FL_response;
 using _controls = frontlook_dotnetframework_library.FL_webpage.FL_Controls.FL_Control;
 using frontlook_dotnetframework_library.FL_webpage.FL_DataBase;
+using PayRoll.App_Data.repository;
 using repository;
 
 namespace PayRoll

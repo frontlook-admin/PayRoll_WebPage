@@ -1,7 +1,7 @@
-﻿using MySql.Data.MySqlClient;
-using frontlook_dotnetframework_library.FL_webpage.FL_DataBase;
+﻿using frontlook_dotnetframework_library.FL_webpage.FL_DataBase;
+using MySql.Data.MySqlClient;
 
-namespace repository
+namespace PayRoll.App_Data.repository
 {
     public static class general_repo
     {
