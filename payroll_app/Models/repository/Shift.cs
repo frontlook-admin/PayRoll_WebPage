@@ -10,14 +10,18 @@ namespace payroll_app.Models.repository
     {
         
         [Key]
+        [Display(Name = "Shift Id")]
+        [Column("ShiftId",Order = 0)]
         public int ShiftId { get; set; }
 
+        [Key]
         [Display(Name = "Shift Code")]
-        [Column("ShiftCode")]
+        [Column("ShiftCode", Order = 2)]
         public string ShiftCode { get; set; }
 
+        [Key]
         [Display(Name = "Shift Name")]
-        [Column("ShiftName")]
+        [Column("ShiftName", Order = 1)]
         public string ShiftName { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:h:mm:sstt}", ApplyFormatInEditMode = true)]

@@ -11,12 +11,6 @@ namespace payroll_app.Data
             
         }
 
-        public DbSet<Department> Departments;
-        public DbSet<WorkerType> WorkerTypes;
-        public DbSet<Grade> Grades;
-        public DbSet<Employee> Employees;
-        public DbSet<AttendanceRegister> AttendanceRegisters;
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -35,7 +29,13 @@ namespace payroll_app.Data
             modelBuilder.Entity<Employee>().HasKey(s => s.Id);
             modelBuilder.Entity<Employee>().HasAlternateKey(s => s.PrimaryMobileNo);
 
-            modelBuilder.Entity<AttendanceRegister>().HasKey(s => s.Id);
+            modelBuilder.Entity<AttendanceRegister>().HasKey(s => s.AttendanceRegisterId);
+
+            
+
+            modelBuilder.Entity<Shift>().HasKey(s => s.ShiftId);
+            modelBuilder.Entity<Shift>().HasAlternateKey(s => s.ShiftName);
+            modelBuilder.Entity<Shift>().HasAlternateKey(s => s.ShiftCode);
         }
 
         public DbSet<Department> Department { get; set; }
@@ -43,6 +43,7 @@ namespace payroll_app.Data
         public DbSet<Grade> Grade { get; set; }
         public DbSet<Employee> Employee { get; set; }
         public DbSet<AttendanceRegister> AttendanceRegister { get; set; }
+        public DbSet<Shift> Shift { get; set; }
 
         
     }

@@ -17,7 +17,7 @@ namespace payroll_app.Models.repository
         }
 
         [Key]
-        public int Id { get; set; }
+        public int AttendanceRegisterId { get; set; }
         
         [ForeignKey("Id")]
         public int EmployeeId { get; set; }
@@ -31,7 +31,7 @@ namespace payroll_app.Models.repository
         [Timestamp]
         public DateTime AttendanceTime { get; set; }
 
-        [ForeignKey("EmployeeId")]
+        [ForeignKey("Id")]
         public Employee Employees { get; set; }
     }
 }
