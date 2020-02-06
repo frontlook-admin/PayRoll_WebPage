@@ -2,12 +2,11 @@
 using System.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using frontlook_dotnetframework_library.FL_universal;
 using _response = frontlook_dotnetframework_library.FL_webpage.FL_general.FL_response;
-using _controls = frontlook_dotnetframework_library.FL_webpage.FL_Controls.FL_GetControl;
-using _sql = frontlook_dotnetframework_library.FL_webpage.FL_DataBase.FL_SqlExecutor;
+using _controls = frontlook_dotnetframework_library.FL_webpage.FL_Controls.FL_Control;
 using MySql.Data.MySqlClient;
 using frontlook_dotnetframework_library.FL_webpage.FL_Controls;
+using frontlook_dotnetframework_library.FL_webpage.FL_DataBase;
 
 namespace PayRoll
 {
@@ -48,7 +47,7 @@ namespace PayRoll
                 };
                 Dl.Items.Add(Item1);
 
-                _sql.Con_switch(con);
+                con.Con_switch();
                 var Reader = cmd.ExecuteReader();
 
                 while (Reader.Read())
@@ -61,7 +60,7 @@ namespace PayRoll
                     Dl.Items.Add(Item);
                 }
                 Reader.Close();
-                _sql.Con_switch(con);
+                con.Con_switch();
             }
             catch (Exception E)
             {
@@ -112,9 +111,9 @@ namespace PayRoll
             if (!emp.SelectedValue.Equals("0"))
             {
                 cmd.CommandText = command_builder();
-                _sql.Con_switch(con);
+                con.Con_switch();
                 int r = cmd.ExecuteNonQuery();
-                _sql.Con_switch(con);
+                con.Con_switch();
                 if (r.Equals(1))
                 {
                     Response.Write(_response.FL_message("Attendence given for " + emp.SelectedItem.Text + "..!!", "/attendance"));

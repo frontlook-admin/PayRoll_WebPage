@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Configuration;
-using System.Data;
 using System.Drawing;
-using System.Linq;
+using System.Web.Script.Services;
+using System.Web.Services;
+using System.Web.UI;
 using System.Web.UI.WebControls;
-using _response = frontlook_dotnetframework_library.FL_webpage.FL_general.FL_response;
-using _color = frontlook_dotnetframework_library.FL_webpage.FL_general.FL_Color;
 using frontlook_dotnetframework_library.FL_webpage.FL_DataBase;
 using frontlook_dotnetframework_library.FL_webpage.FL_general;
 using MySql.Data.MySqlClient;
 using repository;
+using _response = frontlook_dotnetframework_library.FL_webpage.FL_general.FL_response;
+using _color = frontlook_dotnetframework_library.FL_webpage.FL_general.FL_Color;
 using _repo = repository.FL_Repo;
-using System.Web.UI;
 
 namespace PayRoll
 {
-    public partial class Salhead : System.Web.UI.Page
+    public partial class Salhead : Page
     {
         private static readonly string Constring = ConfigurationManager.ConnectionStrings["payrollConnectionString"].ConnectionString;
 
@@ -115,7 +115,7 @@ namespace PayRoll
             }
             catch (Exception e)
             {
-                Response.Write(_response.FL_message("Message 3:" + e.Message));
+                Response.Write(("Message 3:" + e.Message).FL_message());
             }
         }
 
@@ -144,7 +144,7 @@ namespace PayRoll
             }
             catch (Exception e)
             {
-                Response.Write(_response.FL_message("Message 2:" + e.Message));
+                Response.Write(("Message 2:" + e.Message).FL_message());
             }
         }
 
@@ -192,30 +192,28 @@ namespace PayRoll
                         con.Con_switch();
                         if (q == t && q == 1)
                         {
-                            Response.Write(_response.FL_message("Salary Head " + ins._name.ToUpper() + " Successfully Created...!!!",
-                                "salaryhead.aspx';"));
+                            Response.Write(("Salary Head " + ins._name.ToUpper() + " Successfully Created...!!!").FL_message("salaryhead.aspx';"));
                         }
                     }
                     catch (MySqlException x)
                     {
-                        Response.Write(_response.FL_message(x.Code + "\\n\\n" + x.SqlState + "\\n\\n" + x.StackTrace + "\\n\\n" + x.Message));
+                        Response.Write((x.Code + "\\n\\n" + x.SqlState + "\\n\\n" + x.StackTrace + "\\n\\n" + x.Message).FL_message());
                     }
                     catch (Exception ex)
                     {
-                        Response.Write(_response.FL_message("Message 1:" + ex.Message));
+                        Response.Write(("Message 1:" + ex.Message).FL_message());
                     }
 
                 }
                 else
                 {
-                    Response.Write(_response.FL_message("Salary Head " + ins._name.ToUpper() + " Successfully Created...!!!",
-                        "salaryhead.aspx';"));
+                    Response.Write(("Salary Head " + ins._name.ToUpper() + " Successfully Created...!!!").FL_message("salaryhead.aspx';"));
                 }
             }
             else
             {
-                Response.Write(_response.FL_message("Salary Head Is Already Present With Name " +
-                                                      add_name.ToString().ToUpper()));
+                Response.Write(("Salary Head Is Already Present With Name " +
+                                add_name.ToString().ToUpper()).FL_message());
             }
 
 
@@ -246,32 +244,29 @@ namespace PayRoll
                 {
                     if (_repo.Column_Exists("salary_info", edit_oldname.Text) && _repo.Column_Exists("salary_generate", edit_oldname.Text))
                     {
-                        var q = 0;
-                        var t = 0;
-
                         cmd.CommandText = "ALTER TABLE salary_info CHANGE COLUMN `" + edit_oldname.Text + "` `" + set._name + "` DECIMAL(20,2);";
                         con.Con_switch();
-                        q = cmd.ExecuteNonQuery();
+                        var q = cmd.ExecuteNonQuery();
                         con.Con_switch();
 
                         cmd.CommandText = "ALTER TABLE salary_generate CHANGE COLUMN `" + edit_oldname.Text + "` `" + set._name + "` DECIMAL(20,2);";
                         con.Con_switch();
-                        t = cmd.ExecuteNonQuery();
+                        var t = cmd.ExecuteNonQuery();
                         con.Con_switch();
 
                         if (q == t && q == 1)
                         {
                             Listing_edit_ddl();
-                            Response.Write(_response.FL_message("Salary Head Column " + edit_oldname.Text.ToUpper() + " Changed To" + set._name.ToUpper() +
-                                                                " Successfully...!!!", "~/salaryhead.aspx"));
+                            Response.Write(("Salary Head Column " + edit_oldname.Text.ToUpper() + " Changed To" + set._name.ToUpper() +
+                                            " Successfully...!!!").FL_message("~/salaryhead.aspx"));
                         }
                     }
                     else
                     {
                         try
                         {
-                            var q = 0;
-                            var t = 0;
+                            int q;
+                            int t;
 
                             if (_repo.Column_Exists("salary_info", edit_oldname.Text))
                             {
@@ -305,17 +300,16 @@ namespace PayRoll
 
                             if (q == t && t == 1)
                             {
-                                Response.Write(_response.FL_message("Salary Head " + set._name.ToUpper() + " Successfully Created...!!!",
-                                    "salaryhead.aspx';"));
+                                Response.Write(("Salary Head " + set._name.ToUpper() + " Successfully Created...!!!").FL_message("salaryhead.aspx';"));
                             }
                         }
                         catch (MySqlException x)
                         {
-                            Response.Write(_response.FL_message(x.Code + "\\n\\n" + x.SqlState + "\\n\\n" + x.StackTrace + "\\n\\n" + x.Message));
+                            Response.Write((x.Code + "\\n\\n" + x.SqlState + "\\n\\n" + x.StackTrace + "\\n\\n" + x.Message).FL_message());
                         }
                         catch (Exception ex)
                         {
-                            Response.Write(_response.FL_message("Message 1:" + ex.Message));
+                            Response.Write(("Message 1:" + ex.Message).FL_message());
                         }
                     }
                 }
@@ -358,17 +352,17 @@ namespace PayRoll
                     }
                     if (q == t && t == 1)
                     {
-                        Response.Write(_response.FL_message("Salary Head Column " + edit_oldname.Text.ToUpper() +
-                                                            " Changed To" + set._name.ToUpper() +
-                                                            " Successfully...!!!", "~/salaryhead.aspx"));
+                        Response.Write(("Salary Head Column " + edit_oldname.Text.ToUpper() +
+                                        " Changed To" + set._name.ToUpper() +
+                                        " Successfully...!!!").FL_message("~/salaryhead.aspx"));
                     }
                 }
             }
             else
             {
 
-                Response.Write(_response.FL_message("Salary Head Is Already Present With Name " +
-                set._name.ToUpper()));
+                Response.Write(("Salary Head Is Already Present With Name " +
+                                set._name.ToUpper()).FL_message());
             }
 
 
@@ -405,25 +399,24 @@ namespace PayRoll
                     }
                     if (q == t && t == 1)
                     {
-                        Response.Write(_response.FL_message(edit_oldname.Text.ToUpper(), "salaryhead.aspx"));
+                        Response.Write(edit_oldname.Text.ToUpper().FL_message("salaryhead.aspx"));
                     }
                 }
                 else
                 {
-                    Response.Write(_response.FL_message("Something went wrong while deleting " +
-                                                        edit_oldname.Text.ToUpper() + "...!!"));
+                    Response.Write(("Something went wrong while deleting " +
+                                    edit_oldname.Text.ToUpper() + "...!!").FL_message());
                 }
             }
             catch (Exception e)
             {
-                Response.Write(_response.FL_message(e.Message));
+                Response.Write(e.Message.FL_message());
             }
         }
 
         private void Set_data_for_saving()
         {
-            char[] a = new char[]
-            {
+            char[] a = {
             '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '+', '=', '`', '|'
             ,';','"',':','>','?','<',',','.','{','}','[',']','/','*','-','+'
             };
@@ -446,8 +439,7 @@ namespace PayRoll
 
         private void Set_data_for_updating()
         {
-            char[] a = new char[]
-            {
+            char[] a = {
             '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '+', '=', '`', '|'
             ,';','"',':','>','?','<',',','.','{','}','[',']','/','*','-','+'
             };
@@ -552,7 +544,7 @@ namespace PayRoll
             }
             else
             {
-                Response.Write(_response.FL_message("No Fields Can Be Empty..!!"));
+                Response.Write("No Fields Can Be Empty..!!".FL_message());
             }
         }
 
@@ -573,7 +565,7 @@ namespace PayRoll
             }
             else
             {
-                Response.Write(_response.FL_message("No Fields Can Be Empty..!!"));
+                Response.Write("No Fields Can Be Empty..!!".FL_message());
             }
 
             Listing_edit_ddl();
@@ -619,17 +611,17 @@ namespace PayRoll
             }
             catch (Exception e)
             {
-                Response.Write(_response.FL_message("Message 2:" + e.Message));
+                Response.Write(("Message 2:" + e.Message).FL_message());
             }
         }
 
-        [System.Web.Services.WebMethod()]
-        [System.Web.Script.Services.ScriptMethod()]
+        [WebMethod]
+        [ScriptMethod]
         private void add_text_to_cursor_position(TextBox TextBox, string input)
         {
-            string jsFunc = $"insertAtCursor(" + TextBox.ID + "," + input + ")";
+            string jsFunc = "insertAtCursor(" + TextBox.ID + "," + input + ")";
             //ScriptManager.RegisterStartupScript(this.Page, Page.GetType(), "myJsFn", jsFunc, true);
-            ScriptManager.RegisterStartupScript(this.Page, GetType(), "insertAtCursor", jsFunc, true);
+            ScriptManager.RegisterStartupScript(Page, GetType(), "insertAtCursor", jsFunc, true);
             ClientScript.RegisterClientScriptBlock(GetType(), "id", jsFunc, true);
         }
 
@@ -639,9 +631,9 @@ namespace PayRoll
 
             var insertText = add_formula_list.SelectedValue;
             add_text_to_cursor_position(add_formula, insertText);
-            string jsFunc = $"insertAtCursor(" + add_formula.ID + "," + insertText + ")";
+            string jsFunc = "insertAtCursor(" + add_formula.ID + "," + insertText + ")";
             //ScriptManager.RegisterStartupScript(this.Page, Page.GetType(), "myJsFn", jsFunc, true);
-            ScriptManager.RegisterClientScriptBlock(this.add_formula_list, GetType(), "insertAtCursor", jsFunc, true);
+            ScriptManager.RegisterClientScriptBlock(add_formula_list, GetType(), "insertAtCursor", jsFunc, true);
         }
 
         protected void edit_formula_list_SelectedIndexChanged(object sender, EventArgs e)

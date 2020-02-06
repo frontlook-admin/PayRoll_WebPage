@@ -1,23 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data;
-using System.Linq;
+using System.Text.RegularExpressions;
+using System.Web.UI;
 using System.Web.UI.WebControls;
 using frontlook_dotnetframework_library.FL_universal;
-using _response = frontlook_dotnetframework_library.FL_webpage.FL_general.FL_response;
-using _controls = frontlook_dotnetframework_library.FL_webpage.FL_Controls.FL_GetControl;
+using frontlook_dotnetframework_library.FL_webpage.FL_Controls;
 using frontlook_dotnetframework_library.FL_webpage.FL_DataBase;
+using frontlook_dotnetframework_library.FL_webpage.FL_general;
+using JetBrains.Annotations;
 using MySql.Data.MySqlClient;
 using repository;
+using _controls = frontlook_dotnetframework_library.FL_webpage.FL_Controls.FL_Control;
 using _prr = repository.payroll_repo;
 using _repo = repository;
-using frontlook_dotnetframework_library.FL_webpage.FL_Controls;
-using System.Text.RegularExpressions;
 
 namespace PayRoll
 {
-    public partial class Salgen : System.Web.UI.Page
+    public partial class Salgen : Page
     {
         private static readonly string Constring = ConfigurationManager.ConnectionStrings["payrollConnectionString"].ConnectionString;
 
@@ -70,20 +70,10 @@ namespace PayRoll
 
         private string return_formula(string x)
         {
-            var c = "";
-            cmd.CommandText =
-                "SELECT salhead_formula, salhead_group_id, group_name, group_code FROM salary_head LEFT JOIN head_group ho on salary_head.salhead_group_id = ho.group_id WHERE salhead_name='" +
+            var query = "SELECT salhead_formula, salhead_group_id, group_name, group_code FROM salary_head LEFT JOIN head_group ho on salary_head.salhead_group_id = ho.group_id WHERE salhead_name='" +
                 x + "';";
-            con.Con_switch();
-            var reader = cmd.ExecuteReader();
-            while (reader.Read())
-            {
-                c = reader["salhead_formula"].ToString();
-            }
-            reader.Close();
-            reader.Dispose();
-            con.Con_switch();
-            Response.Write(_response.FL_printmessage_to_webpage(c));
+            var c = cmd.GetValue(query, con);
+            Response.Write(c.FL_printmessage_to_webpage());
             return c;
         }
 
@@ -113,12 +103,13 @@ namespace PayRoll
             return formula;
         }
 
+        [UsedImplicitly]
         private void test(string id)
         {
             Regex regex = new Regex(@"([a-z A-Z]+)*");
             foreach (Match x in regex.Matches(id))
             {
-                Response.Write(_response.FL_printmessage_to_webpage(x.Value));
+                Response.Write(x.Value.FL_printmessage_to_webpage());
             }
         }
 
@@ -128,7 +119,7 @@ namespace PayRoll
             for (var i = 0; i <= (count - 1); i++)
             {
                 formula[i] = replace_formula(formula[i]);
-                Response.Write(_response.FL_printmessage_to_webpage(formula[i]));
+                Response.Write(formula[i].FL_printmessage_to_webpage());
             }
 
             return formula;
@@ -150,7 +141,7 @@ namespace PayRoll
                 {
                     cmd.CommandText =
                         "SELECT salhead_formula, salhead_group_id, group_name, group_code FROM salary_head LEFT JOIN head_group ho on salary_head.salhead_group_id = ho.group_id WHERE salhead_name = '" + ids[i] +
-                        "';";
+                        "'AND NOT(ho.group_code = 'N') ;";
                     con.Con_switch();
                     var reader = cmd.ExecuteReader();
                     while (reader.Read())
@@ -168,7 +159,7 @@ namespace PayRoll
 
                 for (var i = 0; i <= (count - 1); i++)
                 {
-                    Response.Write(_response.FL_printmessage_to_webpage(formula[i]));
+                    Response.Write(formula[i].FL_printmessage_to_webpage());
                     cmd.CommandText = "SELECT " + formula[i] + " AS `" + ids[i] + "` FROM salary_info WHERE id=" +
                                       int.Parse(id) + ";";
                     con.Con_switch();
@@ -181,7 +172,7 @@ namespace PayRoll
                             a = "0.00";
                         }
                         amts[i] = Math.Round(double.Parse(a), 2, MidpointRounding.AwayFromZero);
-                        Response.Write(_response.FL_printmessage_to_webpage("<br/>" + formula[i]) + "  " + amts[i]);
+                        Response.Write(("<br/>" + formula[i]).FL_printmessage_to_webpage() + "  " + amts[i]);
                     }
 
                     reader1.Close();
@@ -196,21 +187,27 @@ namespace PayRoll
                 }
 
                 var amt = "";
-                double attendance = attendence_calc.attendence_month(con, cmd, int.Parse(id), set_date.Text.ToString());
-                double days = attendence_calc.no_days_month(con, cmd, set_date.Text);
+                var f = "";
+                //double attendance = attendence_calc.attendence_month(con, cmd, int.Parse(id), set_date.Text.ToString());
+                //double days = attendence_calc.no_days_month(con, cmd, set_date.Text);
                 for (var i = 0; i < (count - 1); i = i + 2)
                 {
-                    if (i == 0)
+                    /*if (i == 0)
                     {
-                        amt = amt + sign[i] + precision_point((amts[i] * attendance / days)) + sign[i + 1] + precision_point(amts[i + 1]);
+                        amt = amt + sign[i] + precision_point(amts[i]) + sign[i + 1] + precision_point(amts[i + 1]);
+                        f = f + sign[i] + formula[i] + sign[i + 1] + formula[i + 1];
                     }
                     else
                     {
                         amt = amt + sign[i] + precision_point(amts[i]) + sign[i + 1] + precision_point(amts[i + 1]);
-                    }
+                        f = f + sign[i] + formula[i] + sign[i + 1] + formula[i + 1];
+                    }*/
+                    amt = amt + sign[i] + precision_point(amts[i]) + sign[i + 1] + precision_point(amts[i + 1]);
+                    f = f + sign[i] + formula[i] + sign[i + 1] + formula[i + 1];
 
                 }
-                Response.Write(amt);
+                Response.Write(amt.FL_printmessage_to_webpage());
+                Response.Write(f.FL_printmessage_to_webpage());
                 var val = FL_MathExpression.FL_Result(amt).ToString();
 
                 double final_salary = double.Parse(val);
@@ -223,16 +220,9 @@ namespace PayRoll
             }
         }
 
-        public double precision_point(double amount, int precision = -1)
+        private double precision_point(double amount, int precision = -1)
         {
-            if (precision != -1)
-            {
-                return Math.Round(amount, precision, MidpointRounding.AwayFromZero);
-            }
-            else
-            {
-                return Math.Round(amount, 2, MidpointRounding.AwayFromZero);
-            }
+            return Math.Round(amount, precision != -1 ? precision : 2, MidpointRounding.AwayFromZero);
         }
 
         public void OnPageLoad()
@@ -273,7 +263,7 @@ namespace PayRoll
             }
             catch (Exception e)
             {
-                Response.Write(_response.FL_message("Message 3:" + e.Message));
+                Response.Write(("Message 3:" + e.Message).FL_message());
             }
         }
 
@@ -372,7 +362,7 @@ namespace PayRoll
             }
             catch (MySqlException)
             {
-                Response.Write(_response.FL_message("Sorry..!! Unable to create the form. Please contact your developer for help."));
+                Response.Write("Sorry..!! Unable to create the form. Please contact your developer for help.".FL_message());
             }
         }
 

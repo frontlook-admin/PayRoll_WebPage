@@ -42,49 +42,4 @@
             </div>
         </div>
     </div>
-    <script>
-    /*    $(document).ready(function () {
-            BindControls();
-        });
-
-        // CALL A WEB METHOD TO SAVE DATA USING AJAX.
-        function BindControls() {
-            $('#update_salinfo').click(function () {
-                saveTextValue();
-            });
-
-            var values = new Array();
-
-            function saveTextValue() {
-
-                // WHILE CREATING THE TEXTBOXES THROUGH A CODE PROCEDURE, 
-                // WE HAVE ASSIGNED A CLASS NAME CALLED "fld" TO EACH TEXTBOX.
-                // USING THE CLASS NAME, WE CAN EASILY EXTRACT VALUES FROM THE INPUT BOXES.
-                $('.textfield').each(function () {
-                    if (this.value != '') {
-                        values.push("'" + this.value + "'");
-                    }
-                });
-
-                if (values != '') {
-                    // ONCE WE HAVE ALL THE VALUES, MAKE THE CALL TO OUR WEB METHOD.
-                    $.ajax({
-                        type: 'POST',
-                        url: 'http://localhost:58202/Salinfo',
-                        data: "{'val':'" + escape(values) + "'}",
-                        dataType: 'json',
-                        headers: { "Content-Type": "application/json" },
-                        success: function (response) {
-                            alert(response.d);      // DONE.
-                            values = '';
-                        },
-                        error: function (XMLHttpRequest, textStatus, errorThrown) {
-                            alert(errorThrown);
-                        }
-                    });
-                }
-                else { alert("Fields cannot be empty.") }
-            }
-        }*/
-    </script>
 </asp:Content>
