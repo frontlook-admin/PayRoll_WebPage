@@ -29,7 +29,7 @@ namespace payroll_app.codeHelper
         {
             if (gender != null)
             {
-                if (rand().Equals(1))
+                if (gender.ToLower().Equals("male"))
                 {
                     return hostenv + imgpath + "boy" + rand() + ".png";
                 }
