@@ -1,5 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
-using _sql = frontlook_dotnetframework_library.FL_webpage.FL_DataBase.FL_SqlExecutor;
+using frontlook_dotnetframework_library.FL_webpage.FL_DataBase;
 
 namespace repository
 {
@@ -10,14 +10,14 @@ namespace repository
             var count = 0;
             cmd.CommandText = "SELECT COUNT(salhead_name) as c FROM salary_head WHERE salhead_add_to_salinfo = 1;";
             cmd.Connection = con;
-            _sql.Con_switch(con);
+            con.Con_switch();
             var reader = cmd.ExecuteReader();
             while (reader.Read())
             {
                 count = int.Parse(reader["c"].ToString());
             }
             reader.Close();
-            _sql.Con_switch(con);
+            con.Con_switch();
             return count;
         }
 
@@ -27,7 +27,7 @@ namespace repository
             cmd.CommandText = "SELECT salhead_name FROM salary_head WHERE salhead_add_to_salinfo = 1;";
             var i = 0;
             cmd.Connection = con;
-            _sql.Con_switch(con);
+            con.Con_switch();
             var reader = cmd.ExecuteReader();
             while (reader.Read())
             {
@@ -36,7 +36,7 @@ namespace repository
             }
             reader.Close();
             reader.Dispose();
-            _sql.Con_switch(con);
+            con.Con_switch();
             return ids;
         }
 
@@ -46,7 +46,7 @@ namespace repository
             cmd.CommandText = "SELECT salhead_name FROM salary_head WHERE salhead_add_to_salinfo = 1;";
             var i = 0;
             cmd.Connection = con;
-            _sql.Con_switch(con);
+            con.Con_switch();
             var reader = cmd.ExecuteReader();
             while (reader.Read())
             {
@@ -55,7 +55,7 @@ namespace repository
             }
             reader.Close();
             reader.Dispose();
-            _sql.Con_switch(con);
+            con.Con_switch();
             return controlids;
         }
 
