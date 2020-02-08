@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace repository
+namespace PayRoll.App_Data.repository
 {
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
@@ -53,49 +53,49 @@ namespace repository
 
         public string Oldname
         {
-            get { return _oldname; }
-            set { _oldname = value; }
+            get => _oldname;
+            set => _oldname = value;
         }
 
         public string GroupCode
         {
-            get { return _groupcode; }
-            set { _groupcode = value; }
+            get => _groupcode;
+            set => _groupcode = value;
         }
         public string Formula
         {
-            get { return _formula; }
-            set { _formula = value; }
+            get => _formula;
+            set => _formula = value;
         }
 
         public string Name
         {
-            get { return _name; }
-            set { _name = value; }
+            get => _name;
+            set => _name = value;
         }
 
         public string Code
         {
-            get { return _code; }
-            set { _code = value; }
+            get => _code;
+            set => _code = value;
         }
 
         public bool Add_To_SalInfo
         {
-            get { return _add_to_salinfo; }
-            set { _add_to_salinfo = value; }
+            get => _add_to_salinfo;
+            set => _add_to_salinfo = value;
         }
 
         public DateTime Startdate
         {
-            get { return _startdate; }
-            set { _startdate = value; }
+            get => _startdate;
+            set => _startdate = value;
         }
 
         public int Id
         {
-            get { return _id; }
-            set { _id = value; }
+            get => _id;
+            set => _id = value;
         }
     }
 }

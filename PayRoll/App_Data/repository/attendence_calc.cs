@@ -1,7 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using _sql = frontlook_dotnetframework_library.FL_webpage.FL_DataBase.FL_SqlExecutor;
 
-namespace repository
+namespace PayRoll.App_Data.repository
 {
     public static class attendence_calc
     {

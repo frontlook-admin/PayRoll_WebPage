@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -11,10 +13,8 @@ using frontlook_dotnetframework_library.FL_webpage.FL_general;
 using JetBrains.Annotations;
 using MySql.Data.MySqlClient;
 using PayRoll.App_Data.repository;
-using repository;
 using _controls = frontlook_dotnetframework_library.FL_webpage.FL_Controls.FL_Control;
-using _prr = repository.payroll_repo;
-using _repo = repository;
+using _prr = PayRoll.App_Data.repository.payroll_repo;
 
 namespace PayRoll
 {
@@ -55,8 +55,8 @@ namespace PayRoll
 
         private bool check_formula_all(string formula)
         {
-            bool bo = true;
-            Regex regex = new Regex(@"([a-z A-Z]+)*");
+            //var bo = true;
+            /*var regex = new Regex(@"([a-z A-Z]+)*");
             foreach (Match x in regex.Matches(formula))
             {
                 if (!string.IsNullOrEmpty(x.Value))
@@ -64,7 +64,11 @@ namespace PayRoll
                     bo = bo && check_formula(x.Value, "salary_info");
                 }
             }
-            return bo;
+            return bo;*/
+            
+             var regex = new Regex(@"([a-z A-Z]+)*");
+            return (from Match x in regex.Matches(formula) where !string.IsNullOrEmpty(x.Value) select x).Aggregate(
+                true, (current, x) => current && check_formula(x.Value, "salary_info"));
             /*var regex = new Regex(@"([a-z A-Z]+)*");
             return regex.Matches(formula).Cast<Match>().Aggregate(true, (Current, X) => Current && check_formula(X.Value, "salary_info"));*/
         }
@@ -80,23 +84,19 @@ namespace PayRoll
 
         private string replace_formula(string formula)
         {
-            bool b = check_formula_all(formula);
-            Regex regex = new Regex(@"([a-z A-Z]+)*");
+            var b = check_formula_all(formula);
+            var regex = new Regex(@"([a-z A-Z]+)*");
             while (!b)
             {
                 foreach (Match x in regex.Matches(formula))
                 {
-                    if (!string.IsNullOrEmpty(x.Value))
+                    if (!string.IsNullOrEmpty(x.Value) && !check_formula(x.Value, "salary_info"))
                     {
-                        if (!check_formula(x.Value, "salary_info"))
-                        {
-                            var formula1 = return_formula(x.Value);
-                            formula1 = "(" + formula1 + ")";
-                            //Response.Write(_response.FL_printmessage_to_webpage(formula1));
-                            formula = formula.Replace("`" + x.Value + "`", formula1);
-                        }
+                        var formula1 = return_formula(x.Value);
+                        formula1 = "(" + formula1 + ")";
+                        //Response.Write(_response.FL_printmessage_to_webpage(formula1));
+                        formula = formula.Replace("`" + x.Value + "`", formula1);
                         //Response.Write(_response.FL_printmessage_to_webpage("" + check_formula_all(formula)));
-
                     }
                 }
                 b = check_formula_all(formula);
@@ -116,7 +116,7 @@ namespace PayRoll
 
         private string[] rectified_formula(string[] formula)
         {
-            int count = formula.Length;
+            var count = formula.Length;
             for (var i = 0; i <= (count - 1); i++)
             {
                 formula[i] = replace_formula(formula[i]);
@@ -128,12 +128,12 @@ namespace PayRoll
 
         private void get_value(string id)
         {
-            if (!String.Equals(id, "0"))
+            if (!string.Equals(id, "0"))
             {
                 var count = cmd.Head_Count_Salhead(con);
                 var controlids = cmd.get_ControlIds_Salhead(con);
                 var ids = cmd.Get_Ids_Salhead(con);
-                var groups = new string[count];
+                //var groups = new string[count];
                 var sign = new string[count];
                 var amts = new double[count];
                 var formula = new string[count];
@@ -180,10 +180,10 @@ namespace PayRoll
                     reader1.Dispose();
                     con.Con_switch();
 
-                    if (!string.IsNullOrEmpty(amts[i].ToString()) && !string.Equals(amts[i].ToString(), "0"))
+                    if (!string.IsNullOrEmpty(amts[i].ToString(CultureInfo.InvariantCulture)) && !string.Equals(amts[i].ToString(CultureInfo.InvariantCulture), "0"))
                     {
                         salgen.Controls.Add(FL_Label_TextBox.FL_label_readonly_textbox_default(ids[i]));
-                        ((TextBox)_controls.FL_GetChildControl(salgen, controlids[i])).Text = amts[i].ToString();
+                        ((TextBox)_controls.FL_GetChildControl(salgen, controlids[i])).Text = amts[i].ToString(CultureInfo.InvariantCulture);
                     }
                 }
 
@@ -209,13 +209,13 @@ namespace PayRoll
                 }
                 Response.Write(amt.FL_printmessage_to_webpage());
                 Response.Write(f.FL_printmessage_to_webpage());
-                var val = FL_MathExpression.FL_Result(amt).ToString();
+                var val = FL_MathExpression.FL_Result(amt).ToString(CultureInfo.InvariantCulture);
 
-                double final_salary = double.Parse(val);
-                if (!String.IsNullOrEmpty(amt) && !string.Equals(val, "0"))
+                var final_salary = double.Parse(val);
+                if (!string.IsNullOrEmpty(amt) && !string.Equals(val, "0"))
                 {
                     salgen.Controls.Add(FL_Label_TextBox.FL_label_readonly_textbox_default("Total Salary"));
-                    ((TextBox)_controls.FL_GetChildControl(salgen, "TotalSalary")).Text = Math.Round(final_salary, 2, MidpointRounding.AwayFromZero).ToString();
+                    ((TextBox)_controls.FL_GetChildControl(salgen, "TotalSalary")).Text = Math.Round(final_salary, 2, MidpointRounding.AwayFromZero).ToString(CultureInfo.InvariantCulture);
                 }
 
             }
@@ -302,6 +302,7 @@ namespace PayRoll
             return q;
         }
 
+        [UsedImplicitly]
         private void Get_data(string id)
         {
             var count = cmd.Head_Count_Salhead(con);
@@ -344,6 +345,7 @@ namespace PayRoll
             }*/
         }
 
+        [UsedImplicitly]
         private void Dynamiccontrols()
         {
             try

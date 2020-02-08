@@ -1,9 +1,8 @@
 ﻿using System.Configuration;
 using frontlook_dotnetframework_library.FL_webpage.FL_DataBase.FL_MySql;
 using MySql.Data.MySqlClient;
-using _sql = frontlook_dotnetframework_library.FL_webpage.FL_DataBase.FL_MySql.FL_MySqlExecutor;
 
-namespace repository
+namespace PayRoll.App_Data.repository
 {
     public class FL_Repo
     {

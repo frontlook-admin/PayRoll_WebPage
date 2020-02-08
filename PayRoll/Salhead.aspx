@@ -1,6 +1,5 @@
 ﻿<%@ Page AutoEventWireup="true" CodeBehind="Salhead.aspx.cs" Inherits="PayRoll.Salhead" Language="C#" MasterPageFile="~/Site.Master" Title="" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
-    <div style="place-items: center" align="center"></div>
     <div style="padding-left: 100px">
         <h2><%: Title %></h2>
     </div>
@@ -62,7 +61,7 @@
                                         </div>
                                     </div>
 
-                                    <div style="padding-left: 60px; text-anchor: middle; horiz-align: center">
+                                    <div style="padding-left: 60px; text-anchor: middle;">
                                         <asp:Button BackColor="#0066FF" BorderStyle="None" Font-Bold="True" CssClass="col-md-4 form-control btn-success" ForeColor="White" ID="save_salhead" OnClick="Save_salhead_Click" runat="server" Text="Submit" />
                                     </div>
                                 </asp:Panel>
@@ -118,7 +117,7 @@
                                             </asp:ListBox>
                                         </div>
                                     </div>
-                                    <div class="row" style="padding-left: 150px; text-anchor: middle; horiz-align: center">
+                                    <div class="row" style="padding-left: 150px; text-anchor: middle;">
                                         <div class="form-group">
                                             <asp:Button BackColor="#0066FF" BorderStyle="None" Font-Bold="True" CssClass="btn" ForeColor="White" ID="update_salhead" OnClick="Update_salhead_Click" runat="server" Text="Update" />
                                             <asp:Button BackColor="#FF3399" BorderStyle="None" Font-Bold="True" CssClass="btn" ForeColor="White" ID="del_salhead" OnClick="Del_salhead_Click" runat="server" Text="Delete" />

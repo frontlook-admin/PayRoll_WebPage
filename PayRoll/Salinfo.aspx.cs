@@ -8,7 +8,6 @@ using _response = frontlook_dotnetframework_library.FL_webpage.FL_general.FL_res
 using _controls = frontlook_dotnetframework_library.FL_webpage.FL_Controls.FL_Control;
 using frontlook_dotnetframework_library.FL_webpage.FL_DataBase;
 using PayRoll.App_Data.repository;
-using repository;
 
 namespace PayRoll
 {
@@ -24,6 +23,7 @@ namespace PayRoll
         {
             if (!IsPostBack)
             {
+                
                 OnPageLoad();
             }
             Dynamiccontrols();
@@ -42,10 +42,10 @@ namespace PayRoll
                 //cmd.CommandText = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='payroll_db' AND TABLE_NAME='salary_info' AND COLUMN_NAME NOT IN (SELECT 'id');";
                 cmd.CommandText = "SELECT salhead_name FROM salary_head WHERE salhead_add_to_salinfo = 1;";
                 con.Con_switch();
-                MySqlDataReader reader = cmd.ExecuteReader();
+                var reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    string a = reader["salhead_name"].ToString();
+                    var a = reader["salhead_name"].ToString();
                     add_sec_salinfo.Controls.Add(FL_Label_TextBox.FL_label_textbox_default(a));
                 }
                 reader.Close();

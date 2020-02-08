@@ -8,10 +8,10 @@ using System.Web.UI.WebControls;
 using frontlook_dotnetframework_library.FL_webpage.FL_DataBase;
 using frontlook_dotnetframework_library.FL_webpage.FL_general;
 using MySql.Data.MySqlClient;
-using repository;
+using PayRoll.App_Data.repository;
 using _response = frontlook_dotnetframework_library.FL_webpage.FL_general.FL_response;
 using _color = frontlook_dotnetframework_library.FL_webpage.FL_general.FL_Color;
-using _repo = repository.FL_Repo;
+using _repo = PayRoll.App_Data.repository.FL_Repo;
 
 namespace PayRoll
 {

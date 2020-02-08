@@ -1,4 +1,4 @@
-﻿namespace repository
+﻿namespace PayRoll.App_Data.repository
 {
     public static class payroll_repo
     {
