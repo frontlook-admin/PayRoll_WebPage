@@ -338,6 +338,7 @@
     <Compile Include="Pages\EmployeeMaster\EmployeeMasterIndex.aspx.designer.cs">
       <DependentUpon>EmployeeMasterIndex.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Pages\EmployeeMaster\EmployeeMasterRepo.cs" />
     <Compile Include="Pages\EmployeeMaster\EmployeeMasterUpdate.aspx.cs">
       <DependentUpon>EmployeeMasterUpdate.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
