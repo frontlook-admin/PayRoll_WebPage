@@ -236,6 +236,10 @@
     </Content>
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
+    <Content Include="Pages\EmployeeMaster\EmployeeMasterCreate.aspx" />
+    <Content Include="Pages\EmployeeMaster\EmployeeMasterDelete.aspx" />
+    <Content Include="Pages\EmployeeMaster\EmployeeMasterIndex.aspx" />
+    <Content Include="Pages\EmployeeMaster\EmployeeMasterUpdate.aspx" />
     <Content Include="Pages\Salary\Salgen.aspx" />
     <Content Include="Pages\Salary\Salhead.aspx" />
     <Content Include="Pages\Salary\Salinfo.aspx" />
@@ -313,6 +317,34 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Pages\EmployeeMaster\EmployeeMasterCreate.aspx.cs">
+      <DependentUpon>EmployeeMasterCreate.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\EmployeeMaster\EmployeeMasterCreate.aspx.designer.cs">
+      <DependentUpon>EmployeeMasterCreate.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\EmployeeMaster\EmployeeMasterDelete.aspx.cs">
+      <DependentUpon>EmployeeMasterDelete.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\EmployeeMaster\EmployeeMasterDelete.aspx.designer.cs">
+      <DependentUpon>EmployeeMasterDelete.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\EmployeeMaster\EmployeeMasterIndex.aspx.cs">
+      <DependentUpon>EmployeeMasterIndex.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\EmployeeMaster\EmployeeMasterIndex.aspx.designer.cs">
+      <DependentUpon>EmployeeMasterIndex.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\EmployeeMaster\EmployeeMasterUpdate.aspx.cs">
+      <DependentUpon>EmployeeMasterUpdate.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\EmployeeMaster\EmployeeMasterUpdate.aspx.designer.cs">
+      <DependentUpon>EmployeeMasterUpdate.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Pages\Salary\Salgen.aspx.cs">
       <DependentUpon>Salgen.aspx</DependentUpon>
@@ -359,7 +391,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Code\" />
-    <Folder Include="Pages\EmployeeMaster\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
