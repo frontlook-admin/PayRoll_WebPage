@@ -16,7 +16,7 @@ using PayRoll.App_Data.repository;
 using _controls = frontlook_dotnetframework_library.FL_webpage.FL_Controls.FL_Control;
 using _prr = PayRoll.App_Data.repository.payroll_repo;
 
-namespace PayRoll
+namespace PayRoll.Pages.Salary
 {
     public partial class Salgen : Page
     {

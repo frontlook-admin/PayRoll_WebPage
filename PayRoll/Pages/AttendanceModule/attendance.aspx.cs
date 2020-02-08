@@ -2,13 +2,13 @@
 using System.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using _response = frontlook_dotnetframework_library.FL_webpage.FL_general.FL_response;
-using _controls = frontlook_dotnetframework_library.FL_webpage.FL_Controls.FL_Control;
-using MySql.Data.MySqlClient;
 using frontlook_dotnetframework_library.FL_webpage.FL_Controls;
 using frontlook_dotnetframework_library.FL_webpage.FL_DataBase;
+using MySql.Data.MySqlClient;
+using _response = frontlook_dotnetframework_library.FL_webpage.FL_general.FL_response;
+using _controls = frontlook_dotnetframework_library.FL_webpage.FL_Controls.FL_Control;
 
-namespace PayRoll
+namespace PayRoll.Pages.AttendanceModule
 {
     public partial class attendance : Page
     {

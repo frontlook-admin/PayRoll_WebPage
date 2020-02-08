@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Web.UI.WebControls;
 using frontlook_dotnetframework_library.FL_webpage.FL_Controls;
+using frontlook_dotnetframework_library.FL_webpage.FL_DataBase;
 using MySql.Data.MySqlClient;
+using PayRoll.App_Data.repository;
 using _response = frontlook_dotnetframework_library.FL_webpage.FL_general.FL_response;
 using _controls = frontlook_dotnetframework_library.FL_webpage.FL_Controls.FL_Control;
-using frontlook_dotnetframework_library.FL_webpage.FL_DataBase;
-using PayRoll.App_Data.repository;
 
-namespace PayRoll
+namespace PayRoll.Pages.Salary
 {
     public partial class Salinfo : System.Web.UI.Page
     {

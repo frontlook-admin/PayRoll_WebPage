@@ -7,21 +7,21 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PayRoll
+namespace PayRoll.Pages.Salary
 {
 
 
-    public partial class attendance
+    public partial class Salinfo
     {
 
         /// <summary>
-        /// attendance_panel control.
+        /// add_sec_salinfo_panel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel attendance_panel;
+        protected global::System.Web.UI.WebControls.Panel add_sec_salinfo_panel;
 
         /// <summary>
         /// emp control.
@@ -33,21 +33,21 @@ namespace PayRoll
         protected global::System.Web.UI.WebControls.DropDownList emp;
 
         /// <summary>
-        /// attendance_form control.
+        /// add_sec_salinfo control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl attendance_form;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl add_sec_salinfo;
 
         /// <summary>
-        /// update_attendence control.
+        /// update_salinfo control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button update_attendence;
+        protected global::System.Web.UI.WebControls.Button update_salinfo;
     }
 }

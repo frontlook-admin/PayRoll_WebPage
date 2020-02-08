@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PayRoll
+namespace PayRoll.Pages.Default
 {
 
 

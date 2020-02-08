@@ -1,4 +1,4 @@
-﻿<%@ Page AutoEventWireup="true" CodeBehind="attendance.aspx.cs" Inherits="PayRoll.attendance" Language="C#" MasterPageFile="~/Site.Master" Title="" %>
+﻿<%@ Page AutoEventWireup="true" CodeBehind="~/Pages/AttendanceModule/attendance.aspx.cs" Inherits="PayRoll.Pages.AttendanceModule.attendance" Language="C#" MasterPageFile="~/Site.Master" Title="" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" Runat="Server">
     <div style="padding-left: 100px">
         <h2><%: Title %></h2>

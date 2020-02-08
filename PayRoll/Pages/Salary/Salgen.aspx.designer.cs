@@ -7,21 +7,21 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PayRoll
+namespace PayRoll.Pages.Salary
 {
 
 
-    public partial class Salinfo
+    public partial class Salgen
     {
 
         /// <summary>
-        /// add_sec_salinfo_panel control.
+        /// salgen_panel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel add_sec_salinfo_panel;
+        protected global::System.Web.UI.WebControls.Panel salgen_panel;
 
         /// <summary>
         /// emp control.
@@ -33,21 +33,30 @@ namespace PayRoll
         protected global::System.Web.UI.WebControls.DropDownList emp;
 
         /// <summary>
-        /// add_sec_salinfo control.
+        /// set_date control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl add_sec_salinfo;
+        protected global::System.Web.UI.WebControls.TextBox set_date;
 
         /// <summary>
-        /// update_salinfo control.
+        /// salgen control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button update_salinfo;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl salgen;
+
+        /// <summary>
+        /// btn control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btn;
     }
 }

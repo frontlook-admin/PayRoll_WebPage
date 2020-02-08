@@ -1,4 +1,4 @@
-﻿<%@ Page AutoEventWireup="true" CodeBehind="Salinfo.aspx.cs" Inherits="PayRoll.Salinfo" Language="C#" MasterPageFile="~/Site.Master" Title="" %>
+﻿<%@ Page AutoEventWireup="true" CodeBehind="~/Salinfo.aspx.cs" Inherits="PayRoll.Pages.Salary.Salinfo" Language="C#" MasterPageFile="~/Site.Master" Title="" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <div style="padding-left: 100px">
         <h2><%: Title %></h2>

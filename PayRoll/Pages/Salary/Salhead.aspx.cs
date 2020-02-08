@@ -13,7 +13,7 @@ using _response = frontlook_dotnetframework_library.FL_webpage.FL_general.FL_res
 using _color = frontlook_dotnetframework_library.FL_webpage.FL_general.FL_Color;
 using _repo = PayRoll.App_Data.repository.FL_Repo;
 
-namespace PayRoll
+namespace PayRoll.Pages.Salary
 {
     public partial class Salhead : Page
     {
