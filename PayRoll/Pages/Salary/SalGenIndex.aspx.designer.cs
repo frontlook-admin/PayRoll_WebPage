@@ -7,11 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PayRoll.Pages.EmployeeMaster
+namespace PayRoll.Pages.Salary
 {
 
 
-    public partial class EmployeeMasterIndex
+    public partial class SalGenIndex
     {
 
         /// <summary>

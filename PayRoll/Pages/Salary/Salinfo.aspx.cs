@@ -62,11 +62,12 @@ namespace PayRoll.Pages.Salary
             try
             {
                 cmd.Connection = con;
-                cmd.CommandText = "SELECT concat(IFNULL(CONCAT(employee.id,'     '),''),IFNULL(CONCAT(employee.fname,' '),''),IFNULL(CONCAT(employee.mname,' '),''),IFNULL(CONCAT(employee.lname,' '),'')) as name,id FROM employee;";
+                //cmd.CommandText = "SELECT concat(IFNULL(CONCAT(employee.id,'     '),''),IFNULL(CONCAT(employee.fname,' '),''),IFNULL(CONCAT(employee.mname,' '),''),IFNULL(CONCAT(employee.lname,' '),'')) as name,id FROM employee;";
+                cmd.CommandText = "SELECT concat(IFNULL(CONCAT(employee.id,'     '),''),IFNULL(CONCAT(employee.`Employee Name`,' '),'')) as name,id FROM employee;";
                 /*DropDownList ddl = new DropDownList();
-                add_sec_salinfo.Controls.Add(FL_Label_DropDownList.FL_form_create_dropdownlist1("Employee", con,cmd, 
-                    "SELECT concat(IFNULL(CONCAT(employee.fname,' '),''),IFNULL(CONCAT(employee.mname,' '),''),IFNULL(CONCAT(employee.lname,' '),'')) as Employee,id FROM employee;",
-                    "Employee","id"));*/
+                                add_sec_salinfo.Controls.Add(FL_Label_DropDownList.FL_form_create_dropdownlist1("Employee", con,cmd, 
+                                    "SELECT concat(IFNULL(CONCAT(employee.fname,' '),''),IFNULL(CONCAT(employee.mname,' '),''),IFNULL(CONCAT(employee.lname,' '),'')) as Employee,id FROM employee;",
+                                    "Employee","id"));*/
                 dl.Items.Clear();
                 var item1 = new ListItem
                 {

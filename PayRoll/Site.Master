@@ -58,6 +58,7 @@
                                 <li><a runat="server" href="~/Pages/Salary/Salinfo.aspx">Salary Info</a></li>
                                 <li><a runat="server" href="~/Pages/Salary/Salgen.aspx">Salary Generate</a></li>
                                 <li><a runat="server" href="~/Pages/AttendanceModule/attendance.aspx">Attendence</a></li>
+                                <li><a runat="server" href="~/Pages/Salary/SalGenIndex.aspx">Salary Generated Index</a></li>
                             </ul>
                         </li>
                         <li><a runat="server" href="~/Pages/Default/About.aspx"><span class="glyphicon glyphicon-info-sign"></span>  About</a></li>

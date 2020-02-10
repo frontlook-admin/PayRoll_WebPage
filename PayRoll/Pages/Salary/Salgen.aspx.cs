@@ -9,6 +9,7 @@ using System.Web.UI.WebControls;
 using frontlook_dotnetframework_library.FL_universal;
 using frontlook_dotnetframework_library.FL_webpage.FL_Controls;
 using frontlook_dotnetframework_library.FL_webpage.FL_DataBase;
+using frontlook_dotnetframework_library.FL_webpage.FL_DataBase.FL_MySql;
 using frontlook_dotnetframework_library.FL_webpage.FL_general;
 using JetBrains.Annotations;
 using MySql.Data.MySqlClient;
@@ -77,7 +78,7 @@ namespace PayRoll.Pages.Salary
         {
             var query = "SELECT salhead_formula, salhead_group_id, group_name, group_code FROM salary_head LEFT JOIN head_group ho on salary_head.salhead_group_id = ho.group_id WHERE salhead_name='" +
                 x + "';";
-            var c = cmd.GetValue(query, con);
+            var c = cmd.GetValue(query, con, "salhead_formula");
             Response.Write(c.FL_printmessage_to_webpage());
             return c;
         }
@@ -136,6 +137,7 @@ namespace PayRoll.Pages.Salary
                 //var groups = new string[count];
                 var sign = new string[count];
                 var amts = new double[count];
+                var amtsoriginal = new double[count];
                 var formula = new string[count];
 
                 for (var i = 0; i <= (count - 1); i++)
@@ -180,10 +182,39 @@ namespace PayRoll.Pages.Salary
                     reader1.Dispose();
                     con.Con_switch();
 
+                    cmd.CommandText = "SELECT `" + ids[i] + "` FROM salary_info WHERE id=" +
+                                      int.Parse(id) + ";";
+                    Response.Write(cmd.CommandText.FL_printmessage_to_webpage());
+                    con.Con_switch();
+                    var reader2 = cmd.ExecuteReader();
+                    while (reader2.Read())
+                    {
+                        var a = reader2[ids[i]].ToString();
+                        if (string.IsNullOrEmpty(a))
+                        {
+                            a = "0.00";
+                        }
+                        amtsoriginal[i] = Math.Round(double.Parse(a), 2, MidpointRounding.AwayFromZero);
+                        Response.Write(("<br/>" + formula[i]).FL_printmessage_to_webpage() + "  " + amtsoriginal[i]);
+                    }
+                    reader2.Close();
+                    reader2.Dispose();
+                    con.Con_switch();
+
                     if (!string.IsNullOrEmpty(amts[i].ToString(CultureInfo.InvariantCulture)) && !string.Equals(amts[i].ToString(CultureInfo.InvariantCulture), "0"))
                     {
-                        salgen.Controls.Add(FL_Label_TextBox.FL_label_readonly_textbox_default(ids[i]));
-                        ((TextBox)_controls.FL_GetChildControl(salgen, controlids[i])).Text = amts[i].ToString(CultureInfo.InvariantCulture);
+                        /*if (ids[i].Equals("Attendance"))
+                        {
+                            salgen.Controls.Add(FL_Label_TextBox.FL_label_textbox_default(ids[i]));
+                            ((TextBox)_controls.FL_GetChildControl(salgen, controlids[i])).Text = amtsoriginal[i].ToString(CultureInfo.InvariantCulture);
+                        }
+                        else
+                        {
+                            salgen.Controls.Add(FL_Label_TextBox.FL_label_readonly_textbox_default(ids[i]));
+                            ((TextBox)_controls.FL_GetChildControl(salgen, controlids[i])).Text = amts[i].ToString(CultureInfo.InvariantCulture);
+                        }*/
+                        salgen.Controls.Add(FL_Label_TextBox.FL_label_textbox_default(ids[i]));
+                        ((TextBox)_controls.FL_GetChildControl(salgen, controlids[i])).Text = amtsoriginal[i].ToString(CultureInfo.InvariantCulture);
                     }
                 }
 
@@ -193,7 +224,7 @@ namespace PayRoll.Pages.Salary
                 //double days = attendence_calc.no_days_month(con, cmd, set_date.Text);
                 for (var i = 0; i < (count - 1); i = i + 2)
                 {
-                    /*if (i == 0)
+                    if (i == 0)
                     {
                         amt = amt + sign[i] + precision_point(amts[i]) + sign[i + 1] + precision_point(amts[i + 1]);
                         f = f + sign[i] + formula[i] + sign[i + 1] + formula[i + 1];
@@ -202,9 +233,9 @@ namespace PayRoll.Pages.Salary
                     {
                         amt = amt + sign[i] + precision_point(amts[i]) + sign[i + 1] + precision_point(amts[i + 1]);
                         f = f + sign[i] + formula[i] + sign[i + 1] + formula[i + 1];
-                    }*/
-                    amt = amt + sign[i] + precision_point(amts[i]) + sign[i + 1] + precision_point(amts[i + 1]);
-                    f = f + sign[i] + formula[i] + sign[i + 1] + formula[i + 1];
+                    }
+                    /*amt = amt + sign[i] + precision_point(amts[i]) + sign[i + 1] + precision_point(amts[i + 1]);
+                    f = f + sign[i] + formula[i] + sign[i + 1] + formula[i + 1];*/
 
                 }
                 Response.Write(amt.FL_printmessage_to_webpage());
@@ -218,6 +249,25 @@ namespace PayRoll.Pages.Salary
                     ((TextBox)_controls.FL_GetChildControl(salgen, "TotalSalary")).Text = Math.Round(final_salary, 2, MidpointRounding.AwayFromZero).ToString(CultureInfo.InvariantCulture);
                 }
 
+            }
+        }
+
+        public void Insert_DataTo_SalGen()
+        {
+            var count = cmd.Head_Count_Salhead(con);
+            var controlids = cmd.get_ControlIds_Salhead(con);
+            var ids = cmd.Get_Ids_Salhead(con);
+
+            var selectitems = FL_MySqlExecutor.FL_MySql_ColumnElementBuilder(count,ids);
+            var selectitemsvalues = FL_MySqlExecutor.FL_MySql_ColumnValueElementBuilder(salgen, count, controlids);
+            var q = "INSERT INTO salary_generate (`Employee Id`,`Salary Info Id`,`Salary Date`,`Total Salary`," +
+                    selectitems + ") VALUES('" + emp.SelectedValue + "','" + emp.SelectedValue + "','" +
+                    set_date.Text + "','"+ ((TextBox)_controls.FL_GetChildControl(salgen, "TotalSalary")).Text + "'," + selectitemsvalues + ");";
+            Response.Write(q.FL_printmessage_to_webpage());
+            var r = cmd.ExecuteCommand(con,q);
+            if (r == 0)
+            {
+                Response.Write("Salary Successfully Generated".FL_message("~/Pages/Salary/SalGenIndex.aspx"));
             }
         }
 
@@ -237,7 +287,8 @@ namespace PayRoll.Pages.Salary
             try
             {
                 cmd.Connection = con;
-                cmd.CommandText = "SELECT concat(IFNULL(CONCAT(employee.id,'     '),''),IFNULL(CONCAT(employee.fname,' '),''),IFNULL(CONCAT(employee.mname,' '),''),IFNULL(CONCAT(employee.lname,' '),'')) as name,id FROM employee;";
+                //cmd.CommandText = "SELECT concat(IFNULL(CONCAT(employee.id,'     '),''),IFNULL(CONCAT(employee.fname,' '),''),IFNULL(CONCAT(employee.mname,' '),''),IFNULL(CONCAT(employee.lname,' '),'')) as name,id FROM employee;";
+                cmd.CommandText = "SELECT concat(IFNULL(CONCAT(employee.id,'     '),''),IFNULL(CONCAT(employee.`Employee Name`,' '),'')) as name,id FROM employee;";
 
                 dl.Items.Clear();
                 var item1 = new ListItem
@@ -372,6 +423,7 @@ namespace PayRoll.Pages.Salary
         protected void btn_Click(object sender, EventArgs e)
         {
             get_value(emp.SelectedValue);
+            Insert_DataTo_SalGen();
         }
     }
 }

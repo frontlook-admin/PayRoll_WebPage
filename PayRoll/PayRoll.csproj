@@ -241,6 +241,7 @@
     <Content Include="Pages\EmployeeMaster\EmployeeMasterIndex.aspx" />
     <Content Include="Pages\EmployeeMaster\EmployeeMasterUpdate.aspx" />
     <Content Include="Pages\Salary\Salgen.aspx" />
+    <Content Include="Pages\Salary\SalGenIndex.aspx" />
     <Content Include="Pages\Salary\Salhead.aspx" />
     <Content Include="Pages\Salary\Salinfo.aspx" />
     <Content Include="Scripts\bootstrap.js" />
@@ -345,6 +346,13 @@
     </Compile>
     <Compile Include="Pages\EmployeeMaster\EmployeeMasterUpdate.aspx.designer.cs">
       <DependentUpon>EmployeeMasterUpdate.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Salary\SalGenIndex.aspx.cs">
+      <DependentUpon>SalGenIndex.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Salary\SalGenIndex.aspx.designer.cs">
+      <DependentUpon>SalGenIndex.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Pages\Salary\Salgen.aspx.cs">
